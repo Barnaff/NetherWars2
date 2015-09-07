@@ -1,0 +1,23 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Gameplay\PlayerController.cs">
+    <Files>
+      <File FileName="Assets\Scripts\Gameplay\GameplayController.cs" Line="64" Column="3" />
+      <File FileName="Assets\NW Engine\NetherWarsEngine.cs" Line="1" Column="1" />
+      <File FileName="Assets\NW Engine\Player\INWPlayer.cs" Line="1" Column="1" />
+      <File FileName="Assets\NW Engine\Player\NWPlayer.cs" Line="1" Column="1" />
+      <File FileName="Assets\NW Engine\Events\NWEventDispatcher.cs" Line="1" Column="1" />
+      <File FileName="Assets\NW Engine\Events\NWEvent.cs" Line="1" Column="1" />
+      <File FileName="Assets\NW Engine\NW Networking\NWServerAction.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Network\NetworkManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\NW Engine\Zones\NWZone.cs" Line="1" Column="1" />
+      <File FileName="Assets\NW Engine\Data Objects\NWGameSetupDataObject.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Gameplay\Cards\CardController.cs" Line="78" Column="33" />
+      <File FileName="Assets\Scripts\Gameplay\PlayerController.cs" Line="70" Column="25" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

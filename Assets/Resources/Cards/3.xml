@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<Card xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CardName>Runeclaw Bear</CardName>
+  <CardId>3</CardId>
+  <CastingCost>2</CastingCost>
+  <Thrashold>G</Thrashold>
+  <CardTypes>
+    <CardType>Creature</CardType>
+  </CardTypes>
+  <CardColors>
+    <CardColor>Green</CardColor>
+  </CardColors>
+  <Power>2</Power>
+  <Toughness>3</Toughness>
+</Card>

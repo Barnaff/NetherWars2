@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<Card xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CardName>Shield Bearer</CardName>
+  <CardId>4</CardId>
+  <CastingCost>1</CastingCost>
+  <Thrashold>W</Thrashold>
+  <CardTypes>
+    <CardType>Creature</CardType>
+  </CardTypes>
+  <CardColors>
+    <CardColor>White</CardColor>
+  </CardColors>
+  <Power>0</Power>
+  <Toughness>3</Toughness>
+</Card>

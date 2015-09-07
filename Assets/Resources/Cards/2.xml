@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<Card xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CardName>Storm Craw</CardName>
+  <CardId>2</CardId>
+  <CastingCost>2</CastingCost>
+  <Thrashold>B</Thrashold>
+  <CardTypes>
+    <CardType>Creature</CardType>
+  </CardTypes>
+  <CardColors>
+    <CardColor>Blue</CardColor>
+  </CardColors>
+  <Power>1</Power>
+  <Toughness>2</Toughness>
+  <ResourceGain />
+  <Abilities />
+</Card>
