@@ -15,6 +15,9 @@ public class GameplayController : MonoBehaviour {
 	[SerializeField]
 	private PlayerController _player2Controller;
 
+
+	private INWPlayer _currentPlayer
+
 	// Use this for initialization
 	void Start () {
 	
@@ -39,10 +42,10 @@ public class GameplayController : MonoBehaviour {
 		Debug.Log("connected");
 		
 		// create the local player
-		INWPlayer player = new NWPlayer();
-		player.PlayerName = "Test Player";
-		player.PlayerID = (int)Random.Range(1,1000);
-		player.DeckCards = new int[10]{1,1,1,2,2,2,3,3,3,4};
+		_currentPlayer = new NWPlayer();
+		_currentPlayer.PlayerName = "Test Player";
+		_currentPlayer.PlayerID = (int)Random.Range(1,1000);
+		_currentPlayer.DeckCards = new int[10]{1,1,1,2,2,2,3,3,3,4};
 
 		// set the player in the server
 		networkManager.SetPlayer(player);
@@ -51,9 +54,14 @@ public class GameplayController : MonoBehaviour {
 		_netherWarsEngine = new NetherWarsEngine(networkManager, player);
 
 		_netherWarsEngine.OnCardCreated += HandleOnCardCreated;
-
+		NWEventDispatcher.Instance().OnCardChangeZone += HandleOnCardChangeZone;
+		NWEventDispatcher.Instance().OnStartTurn += HandleOnStartTurn;
 		_player1Controller.SetPlayer(player);
 	}
+
+
+
+
 
 	#region Events
 
@@ -62,9 +70,21 @@ public class GameplayController : MonoBehaviour {
 		CardController newCardController = Instantiate(_cardControllerPrefab) as CardController;
 		newCardController.SetCard(card);
 
+
 		_player1Controller.AddCard(newCardController);
 
 	}
+	
+	void HandleOnCardChangeZone (NWCard card, NWZone fromZone, NWZone toZone)
+	{
+		
+	}
+
+	void HandleOnStartTurn (INWPlayer player)
+	{
+		
+	}
+
 
 	#endregion
 }

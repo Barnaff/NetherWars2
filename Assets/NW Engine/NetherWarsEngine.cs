@@ -24,7 +24,7 @@ namespace NetherWars
 
 		private INWNetworking _networkManager;
 
-		private IEventDispatcher _eventDispatcher;
+		private NWEventDispatcher _eventDispatcher;
 
 		private int _turnCount = 0;
 
@@ -149,6 +149,8 @@ namespace NetherWars
 			// check if its the first turn - draw hands for the players
 			if (_turnCount == 0)
 			{
+
+				_eventDispatcher.DispatchEvent(NWEvent.StartTurn(_player));
 				foreach (INWPlayer player in _players)
 				{
 					player.DrawCards(7);
@@ -163,9 +165,6 @@ namespace NetherWars
 
 		private void OnJoinedGameHandler()
 		{
-			Debug.Log("joined room");
-			Debug.Log("is server: " + _networkManager.IsServer);
-
 			if (PhotonNetwork.room.playerCount == 2 && _networkManager.IsServer)
 			{
 				StartGame();
