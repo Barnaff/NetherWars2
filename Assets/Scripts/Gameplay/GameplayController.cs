@@ -16,7 +16,7 @@ public class GameplayController : MonoBehaviour {
 	private PlayerController _player2Controller;
 
 
-	private INWPlayer _currentPlayer
+	private INWPlayer _currentPlayer;
 
 	// Use this for initialization
 	void Start () {
@@ -48,15 +48,15 @@ public class GameplayController : MonoBehaviour {
 		_currentPlayer.DeckCards = new int[10]{1,1,1,2,2,2,3,3,3,4};
 
 		// set the player in the server
-		networkManager.SetPlayer(player);
+		networkManager.SetPlayer(_currentPlayer);
 
 		// start the game engine
-		_netherWarsEngine = new NetherWarsEngine(networkManager, player);
+		_netherWarsEngine = new NetherWarsEngine(networkManager, _currentPlayer);
 
 		_netherWarsEngine.OnCardCreated += HandleOnCardCreated;
 		NWEventDispatcher.Instance().OnCardChangeZone += HandleOnCardChangeZone;
 		NWEventDispatcher.Instance().OnStartTurn += HandleOnStartTurn;
-		_player1Controller.SetPlayer(player);
+		_player1Controller.SetPlayer(_currentPlayer);
 	}
 
 
