@@ -18,6 +18,9 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField]
 	private GameObject _handContainer;
 
+	[SerializeField]
+	private Camera _playerCamera;
+
 
 	[SerializeField]
 	private int _playerId;
@@ -46,6 +49,11 @@ public class PlayerController : MonoBehaviour {
 		_player = player;
 	}
 
+	public void SetActivePlayer(bool isActivePlayer)
+	{
+		_playerCamera.gameObject.SetActive(isActivePlayer);
+	}
+
 	public void AddCard(CardController card, eZoneType zone = eZoneType.Library)
 	{
 		_playerCardsDictionary.Add(card.UniqueId, card);
@@ -58,6 +66,8 @@ public class PlayerController : MonoBehaviour {
 		{
 			Debug.LogError("Unsupported zone to add card!");
 		}
+
+		card.transform.SetParent(this.gameObject.transform);
 	}
 
 	#endregion
@@ -68,9 +78,9 @@ public class PlayerController : MonoBehaviour {
 	private void PlaceCardInLibrary(CardController card, bool animated = false)
 	{
 		card.IsFlipped = true;
-		Vector3 position = _libraryContainer.transform.localPosition;
+		Vector3 position = _libraryContainer.transform.position;
 		position.y += _playerCardsDictionary.Count * 0.01f;
-		card.transform.localPosition = position;
+		card.transform.position = position;
 	}
 
 	#endregion

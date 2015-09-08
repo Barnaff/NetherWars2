@@ -10,6 +10,8 @@ namespace NetherWars
 {
 	public delegate void CardCreatedDelegate(NWCard card);
 
+	public delegate void GameInitializedDelegate(List<INWPlayer> players);
+
 	public class NetherWarsEngine  {
 
 		private enum eInitPhaseType
@@ -36,6 +38,8 @@ namespace NetherWars
 
 		// events
 		public event CardCreatedDelegate OnCardCreated;
+
+		public event GameInitializedDelegate OnGameInitialized;
 
 		#region Initialization
 
@@ -149,6 +153,10 @@ namespace NetherWars
 			// check if its the first turn - draw hands for the players
 			if (_turnCount == 0)
 			{
+				if (OnGameInitialized != null)
+				{
+					OnGameInitialized(_players);
+				}
 
 				_eventDispatcher.DispatchEvent(NWEvent.StartTurn(_player));
 				foreach (INWPlayer player in _players)

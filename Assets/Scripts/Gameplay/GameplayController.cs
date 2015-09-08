@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using NetherWars;
+using System.Collections.Generic;
 
 public class GameplayController : MonoBehaviour {
 
@@ -15,6 +16,7 @@ public class GameplayController : MonoBehaviour {
 	[SerializeField]
 	private PlayerController _player2Controller;
 
+	private Dictionary<int, CardController> _cardsInGame = new Dictionary<int, CardController>();
 
 	private INWPlayer _currentPlayer;
 
@@ -54,16 +56,52 @@ public class GameplayController : MonoBehaviour {
 		_netherWarsEngine = new NetherWarsEngine(networkManager, _currentPlayer);
 
 		_netherWarsEngine.OnCardCreated += HandleOnCardCreated;
+		_netherWarsEngine.OnGameInitialized += HandleOnGameInitialized;
 		NWEventDispatcher.Instance().OnCardChangeZone += HandleOnCardChangeZone;
 		NWEventDispatcher.Instance().OnStartTurn += HandleOnStartTurn;
 		_player1Controller.SetPlayer(_currentPlayer);
 	}
 
-
-
-
-
 	#region Events
+
+	void HandleOnGameInitialized (List<INWPlayer> players)
+	{
+		for (int i=0 ; i< players.Count; i++)
+		{
+			INWPlayer player = players[i];
+			PlayerController playerController = null;
+			if (i == 0)
+			{
+				playerController = _player1Controller;
+			}
+			else
+			{
+				playerController = _player2Controller;
+			}
+
+			playerController.SetPlayer(player);
+			playerController.SetActivePlayer(false);
+			if (player.PlayerID == _currentPlayer.PlayerID)
+			{
+				_currentPlayer = player;
+				playerController.SetActivePlayer(true);
+			}
+
+			foreach (NWCard cardData in player.Library.Cards)
+			{
+				if (_cardsInGame.ContainsKey(cardData.CardUniqueID))
+				{
+					CardController card = _cardsInGame[cardData.CardUniqueID];
+					playerController.AddCard(card);
+				}
+				else
+				{
+					Debug.LogError("Could not get card: " + cardData.CardUniqueID + " for player: " + player.PlayerID);
+				}
+			}
+		}
+	}
+
 
 	void HandleOnCardCreated (NWCard card)
 	{
@@ -71,7 +109,7 @@ public class GameplayController : MonoBehaviour {
 		newCardController.SetCard(card);
 
 
-		_player1Controller.AddCard(newCardController);
+		_cardsInGame.Add(newCardController.UniqueId, newCardController);
 
 	}
 	
