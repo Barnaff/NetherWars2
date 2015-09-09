@@ -1,0 +1,16 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Gameplay\Zones\ZoneLibraryController.cs">
+    <Files>
+      <File FileName="Assets\Scripts\Gameplay\Zones\ZoneHandController.cs" Line="7" Column="2" />
+      <File FileName="Assets\Scripts\Gameplay\Zones\ZoneControllerAbstract.cs" Line="6" Column="1" />
+      <File FileName="Assets\Scripts\Gameplay\PlayerController.cs" Line="89" Column="3" />
+      <File FileName="Assets\Scripts\Gameplay\Zones\ZoneLibraryController.cs" Line="5" Column="2" />
+      <File FileName="Assets\Scripts\Gameplay\GameplayController.cs" Line="94" Column="44" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

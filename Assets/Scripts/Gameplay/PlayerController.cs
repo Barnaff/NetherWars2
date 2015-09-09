@@ -7,16 +7,16 @@ using System.Collections.Generic;
 public class PlayerController : MonoBehaviour {
 
 	[SerializeField]
-	private GameObject _battlefieldContainer;
+	private ZoneControllerAbstract _battlefieldContainer;
 
 	[SerializeField]
-	private GameObject _resourceZoneContainer;
+	private ZoneControllerAbstract _resourceZoneContainer;
 
 	[SerializeField]
-	private GameObject _libraryContainer;
+	private ZoneControllerAbstract _libraryContainer;
 
 	[SerializeField]
-	private GameObject _handContainer;
+	private ZoneControllerAbstract _handContainer;
 
 	[SerializeField]
 	private Camera _playerCamera;
@@ -47,6 +47,11 @@ public class PlayerController : MonoBehaviour {
 	public void SetPlayer(INWPlayer player)
 	{
 		_player = player;
+
+		_battlefieldContainer.SetZone(_player.Battlefield, _player);
+		_libraryContainer.SetZone(_player.Library, _player);
+		_handContainer.SetZone(_player.Hand, _player);
+
 	}
 
 	public void SetActivePlayer(bool isActivePlayer)
@@ -78,7 +83,7 @@ public class PlayerController : MonoBehaviour {
 	private void PlaceCardInLibrary(CardController card, bool animated = false)
 	{
 		card.IsFlipped = true;
-		Vector3 position = _libraryContainer.transform.position;
+		Vector3 position = _libraryContainer.gameObject.transform.position;
 		position.y += _playerCardsDictionary.Count * 0.01f;
 		card.transform.position = position;
 	}

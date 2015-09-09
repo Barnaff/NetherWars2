@@ -16,7 +16,9 @@ public class GameplayController : MonoBehaviour {
 	[SerializeField]
 	private PlayerController _player2Controller;
 
-	private Dictionary<int, CardController> _cardsInGame = new Dictionary<int, CardController>();
+	private Dictionary<NWCard, CardController> _cardsInGame = new Dictionary<NWCard, CardController>();
+
+	private Dictionary<NWZone, ZoneControllerAbstract> _zonesIngames = new Dictionary<NWZone, ZoneControllerAbstract>();
 
 	private INWPlayer _currentPlayer;
 
@@ -89,15 +91,25 @@ public class GameplayController : MonoBehaviour {
 
 			foreach (NWCard cardData in player.Library.Cards)
 			{
-				if (_cardsInGame.ContainsKey(cardData.CardUniqueID))
+				if (_cardsInGame.ContainsKey(cardData))
 				{
-					CardController card = _cardsInGame[cardData.CardUniqueID];
+					CardController card = _cardsInGame[cardData];
 					playerController.AddCard(card);
 				}
 				else
 				{
 					Debug.LogError("Could not get card: " + cardData.CardUniqueID + " for player: " + player.PlayerID);
 				}
+			}
+		}
+
+		ZoneControllerAbstract[] zones = FindObjectsOfType<ZoneControllerAbstract>();
+		for (int i=0 ; i < zones.Length; i++)
+		{
+			if (zones[i].Zone != null)
+			{
+				_zonesIngames.Add(zones[i].Zone, zones[i]);
+				Debug.Log("added zone: " + zones[i].Zone.Type + " id: " + zones[i].Zone.ZoneID);
 			}
 		}
 	}
@@ -107,15 +119,23 @@ public class GameplayController : MonoBehaviour {
 	{
 		CardController newCardController = Instantiate(_cardControllerPrefab) as CardController;
 		newCardController.SetCard(card);
-
-
-		_cardsInGame.Add(newCardController.UniqueId, newCardController);
+		newCardController.GetComponent<PhotonView>().viewID = card.CardUniqueID;
+		_cardsInGame.Add(card, newCardController);
 
 	}
 	
 	void HandleOnCardChangeZone (NWCard card, NWZone fromZone, NWZone toZone)
 	{
-		
+		ZoneControllerAbstract fromZoneController = _zonesIngames[fromZone];
+		ZoneControllerAbstract toZoneController = _zonesIngames[toZone];
+		CardController cardController = _cardsInGame[card];
+
+		if (fromZoneController != null && toZoneController != null && card != null)
+		{
+			fromZoneController.RemoveCardFromZone(cardController);
+			toZoneController.AddCardToZone(cardController);
+		}
+	
 	}
 
 	void HandleOnStartTurn (INWPlayer player)

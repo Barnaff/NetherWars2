@@ -153,10 +153,7 @@ namespace NetherWars
 			// check if its the first turn - draw hands for the players
 			if (_turnCount == 0)
 			{
-				if (OnGameInitialized != null)
-				{
-					OnGameInitialized(_players);
-				}
+
 
 				_eventDispatcher.DispatchEvent(NWEvent.StartTurn(_player));
 				foreach (INWPlayer player in _players)
@@ -280,12 +277,36 @@ namespace NetherWars
 			case ServerActionType.GameplayEvent:
 			{
 				NWEvent gameplayEvent = new NWEvent(serverAction);
+				HandleGameplayEvent(gameplayEvent);
 				_eventDispatcher.ProcessEvent(gameplayEvent);
 				break;
 			}
 			default:
 			{
 				Debug.LogError("ERROR - Unsupported action: " + serverAction.ActionType);
+				break;
+			}
+			}
+		}
+
+		private void HandleGameplayEvent(NWEvent gameplayEvent)
+		{
+			switch (gameplayEvent.Type)
+			{
+			case NWEventType.StartTurn:
+			{
+				if (_turnCount == 0)
+				{
+					if (OnGameInitialized != null)
+					{
+						OnGameInitialized(_players);
+					}
+				}
+				_turnCount++;
+				break;
+			}
+			default:
+			{
 				break;
 			}
 			}
