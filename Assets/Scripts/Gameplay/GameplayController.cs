@@ -119,7 +119,6 @@ public class GameplayController : MonoBehaviour {
 	{
 		CardController newCardController = Instantiate(_cardControllerPrefab) as CardController;
 		newCardController.SetCard(card);
-		newCardController.GetComponent<PhotonView>().viewID = card.CardUniqueID;
 		_cardsInGame.Add(card, newCardController);
 
 	}

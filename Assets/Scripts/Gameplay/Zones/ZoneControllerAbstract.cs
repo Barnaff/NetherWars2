@@ -15,7 +15,7 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 	protected INWPlayer _player;
 
 	[SerializeField]
-	protected List<CardController> _cardsInZone = new List<CardController>();
+	protected List<CardController> _cardsInZone;
 
 	// Use this for initialization
 	void Start () {
@@ -29,6 +29,7 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 
 	public virtual void SetZone(NWZone zone, INWPlayer player)
 	{
+		_cardsInZone = new List<CardController>();
 		_zoneData = zone;
 		_zoneType = zone.Type;
 		_player = player;
