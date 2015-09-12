@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public delegate bool CanPlayCardDelegate(PlayerController playerController, CardController card);
 public delegate void PlayCardDelegate(PlayerController playerController, CardController card);
+public delegate bool CanPutInResourceDelegate(PlayerController playerController, CardController card);
+public delegate void PutCardInResourceDelegate(PlayerController playerController, CardController card);
 
 
 public class PlayerController : MonoBehaviour {
@@ -49,6 +51,8 @@ public class PlayerController : MonoBehaviour {
 
 	public CanPlayCardDelegate OnCanPlayCard;
 	public PlayCardDelegate OnPlayCard; 
+	public CanPutInResourceDelegate OnCanPutInResource;
+	public PutCardInResourceDelegate OnPutCardInResource;
 
 	#endregion
 
@@ -128,7 +132,7 @@ public class PlayerController : MonoBehaviour {
 
 					if (releasedInZone != null)
 					{
-						CardAttemtToMoveToZone(_selectedCard, releasedInZone);
+						TryToPlayCardToZone(_selectedCard, releasedInZone);
 					}
 					else
 					{
@@ -196,7 +200,7 @@ public class PlayerController : MonoBehaviour {
 
 	#region User Interactions
 
-	private void CardAttemtToMoveToZone(CardController card, ZoneControllerAbstract zone)
+	private void TryToPlayCardToZone(CardController card, ZoneControllerAbstract zone)
 	{
 		switch (zone.ZoneType)
 		{
@@ -271,6 +275,23 @@ public class PlayerController : MonoBehaviour {
 		if (OnPlayCard != null)
 		{
 			OnPlayCard(this, card);
+		}
+	}
+
+	public bool CanPutCardInResource(CardController card)
+	{
+		if (OnCanPutInResource != null)
+		{
+			return OnCanPutInResource(this, card);
+		}
+		return false;
+	}
+
+	public void PutCardInResource(CardController card)
+	{
+		if (OnPutCardInResource != null)
+		{
+			OnPutCardInResource(this, card);
 		}
 	}
 
