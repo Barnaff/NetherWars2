@@ -4,6 +4,10 @@ using NetherWars;
 using System.Collections.Generic;
 
 
+public delegate bool CanPlayCardDelegate(PlayerController playerController, CardController card);
+public delegate void PlayCardDelegate(PlayerController playerController, CardController card);
+
+
 public class PlayerController : MonoBehaviour {
 
 	[SerializeField]
@@ -25,6 +29,9 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField]
 	private int _playerId;
 
+	[SerializeField]
+	private bool _isActivePlayer;
+
 	private INWPlayer _player;
 
 	[SerializeField]
@@ -38,9 +45,24 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 _screenPoint;
 	private Vector3 _offset;
 
+	#region Events
+
+	public CanPlayCardDelegate OnCanPlayCard;
+	public PlayCardDelegate OnPlayCard; 
+
+	#endregion
+
 	// Use this for initialization
 	void Start () {
 	
+		if (!_isActivePlayer)
+		{
+			Collider[] colliders = this.gameObject.GetComponentsInChildren<Collider>();
+			for (int i=0; i< colliders.Length; i++)
+			{
+				colliders[i].enabled = false;
+			}
+		}
 
 	}
 	
@@ -176,10 +198,16 @@ public class PlayerController : MonoBehaviour {
 
 	private void CardAttemtToMoveToZone(CardController card, ZoneControllerAbstract zone)
 	{
-		switch (zone.Zone.Type)
+		switch (zone.ZoneType)
 		{
 		case eZoneType.Battlefield:
 		{
+			ZoneControllerAbstract lastZone = CurrentZoneForCard(card);
+			if (lastZone != zone)
+			{
+				lastZone.RemoveCardFromZone(card);
+			}
+			zone.AddCardToZone(card);
 
 			break;
 		}
@@ -191,6 +219,50 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	#endregion
+	
 
+	private ZoneControllerAbstract CurrentZoneForCard(CardController card)
+	{
+		if (_handContainer.IsCardInZone(card))
+		{
+			return _handContainer;
+		}
+
+		if (_battlefieldContainer.IsCardInZone(card))
+		{
+			return _battlefieldContainer;
+		}
+
+		if (_resourceZoneContainer.IsCardInZone(card))
+		{
+			return _resourceZoneContainer;
+		}
+
+		if (_libraryContainer.IsCardInZone(card))
+		{
+			return _libraryContainer;
+		}
+
+		return null;
+
+	}
+
+
+	private bool CanPlayCard(CardController card)
+	{
+		if (OnCanPlayCard != null)
+		{
+			return OnCanPlayCard(this, card);
+		}
+		return false;
+	}
+		  
+	private void PlayCard(CardController card)
+	{
+		if (OnPlayCard != null)
+		{
+			OnPlayCard(this, card);
+		}
+	}
 
 }

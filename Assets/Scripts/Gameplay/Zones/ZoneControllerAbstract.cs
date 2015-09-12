@@ -41,6 +41,8 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 
 		this.PlaceCardInZone(card, animated);
 		RegisterToCardEvents(card);
+
+		SortCardInZone(animated);
 	}
 
 	public virtual void RemoveCardFromZone(CardController card)
@@ -50,6 +52,8 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 			_cardsInZone.Remove(card);
 		}
 		UnregisterFromCardEvents(card);
+
+		SortCardInZone(true);
 	}
 	
 	public NWZone Zone
@@ -60,10 +64,30 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 		}
 	}
 
+	public eZoneType ZoneType
+	{
+		get
+		{
+			return _zoneType;
+		}
+	}
+
 	protected abstract void PlaceCardInZone(CardController cardController, bool animated = true);
 
 	protected abstract void SortCardInZone(bool animated);
 
+
+	public bool IsCardInZone(CardController card)
+	{
+		foreach (CardController cardInZone in _cardsInZone)
+		{
+			if (card == cardInZone)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 	#region Register to cards events
 

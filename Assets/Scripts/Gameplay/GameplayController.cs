@@ -62,9 +62,22 @@ public class GameplayController : MonoBehaviour {
 		NWEventDispatcher.Instance().OnCardChangeZone += HandleOnCardChangeZone;
 		NWEventDispatcher.Instance().OnStartTurn += HandleOnStartTurn;
 		_player1Controller.SetPlayer(_currentPlayer);
+
+		_player1Controller.OnCanPlayCard += HandleOnCanPlayCard;
+		_player1Controller.OnPlayCard += HandlePlayCard;
 	}
 
 	#region Events
+
+	private bool HandleOnCanPlayCard(PlayerController playerController, CardController card)
+	{
+		return _netherWarsEngine.CanPlayCard(null, null);
+	}
+
+	private void HandlePlayCard(PlayerController playerController, CardController card)
+	{
+		_netherWarsEngine.PlayCard(null, null);
+	}
 
 	void HandleOnGameInitialized (List<INWPlayer> players)
 	{
@@ -144,4 +157,5 @@ public class GameplayController : MonoBehaviour {
 
 
 	#endregion
+
 }

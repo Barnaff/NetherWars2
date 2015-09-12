@@ -60,6 +60,22 @@ namespace NetherWars
 		#endregion
 
 
+		#region Public
+
+		public bool CanPlayCard(INWPlayer player, NWCard card)
+		{
+			return true;
+		}
+
+		public void PlayCard(INWPlayer player, NWCard card)
+		{
+
+		}
+
+
+		#endregion
+
+
 		#region Private
 
 		private List<NWCard> LoadCards(int[] cardsArray)
