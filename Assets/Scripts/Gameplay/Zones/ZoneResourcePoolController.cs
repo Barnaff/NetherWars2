@@ -7,12 +7,18 @@ public class ZoneResourcePoolController : ZoneControllerAbstract {
 
 	protected override void PlaceCardInZone (CardController cardController, bool animated = true)
 	{
-		throw new System.NotImplementedException ();
+		cardController.IsFlipped = false;
+		cardController.transform.SetParent(this.transform);
+		
+		SortCardInZone(true);
 	}
 
 	protected override void SortCardInZone (bool animated)
 	{
-		throw new System.NotImplementedException ();
+		foreach (CardController card in _cardsInZone)
+		{
+			card.gameObject.transform.localPosition = Vector3.zero;
+		}
 	}
 
 	#endregion

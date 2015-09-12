@@ -208,7 +208,16 @@ public class PlayerController : MonoBehaviour {
 				lastZone.RemoveCardFromZone(card);
 			}
 			zone.AddCardToZone(card);
-
+			break;
+		}
+		case eZoneType.ResourcePool:
+		{
+			ZoneControllerAbstract lastZone = CurrentZoneForCard(card);
+			if (lastZone != zone)
+			{
+				lastZone.RemoveCardFromZone(card);
+			}
+			zone.AddCardToZone(card);
 			break;
 		}
 		default:
