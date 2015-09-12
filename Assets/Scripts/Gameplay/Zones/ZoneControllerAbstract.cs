@@ -40,6 +40,7 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 		_cardsInZone.Add(card);
 
 		this.PlaceCardInZone(card, animated);
+		RegisterToCardEvents(card);
 	}
 
 	public virtual void RemoveCardFromZone(CardController card)
@@ -48,13 +49,9 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 		{
 			_cardsInZone.Remove(card);
 		}
+		UnregisterFromCardEvents(card);
 	}
-
-	public virtual void SortCardInZone(bool animated)
-	{
-
-	}
-
+	
 	public NWZone Zone
 	{
 		get
@@ -65,6 +62,70 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 
 	protected abstract void PlaceCardInZone(CardController cardController, bool animated = true);
 
+	protected abstract void SortCardInZone(bool animated);
 
+
+	#region Register to cards events
+
+	protected virtual void RegisterToCardEvents(CardController card)
+	{
+		card.OnCardClicked += HandleOnCardClicked;
+		card.OnCardIsDragged += HandleOnCardDragged;
+		card.OnCardHover += HandleOnCardHover;
+		card.OnCardEndHover += HandleOnCardEndHover;
+		card.OnCardStartDraging += HandleOnCardStartDraging;
+		card.OnCardEndDraging += HandleOnCardEndDraging;
+	}
+
+
+	protected virtual void UnregisterFromCardEvents(CardController card)
+	{
+		card.OnCardClicked -= HandleOnCardClicked;
+		card.OnCardIsDragged -= HandleOnCardDragged;
+		card.OnCardHover -= HandleOnCardHover;
+		card.OnCardEndHover -= HandleOnCardEndHover;
+		card.OnCardStartDraging -= HandleOnCardStartDraging;
+		card.OnCardEndDraging -= HandleOnCardEndDraging;
+	}
+
+	#endregion
+
+
+	#region Handle Cards Events
+
+	protected virtual void HandleOnCardEndHover (CardController card)
+	{
+		
+	}
+	
+	protected virtual void HandleOnCardHover (CardController card)
+	{
+		
+	}
+
+	protected virtual void HandleOnCardClicked (CardController card)
+	{
+
+	}
+
+	protected virtual void HandleOnCardDragged (CardController card, Vector3 mousePosition)
+	{
+		card.transform.localRotation = Quaternion.Euler(card.transform.localRotation.eulerAngles.x,0,card.transform.localRotation.eulerAngles.z);
+		card.transform.position = mousePosition;
+	}
+
+	protected virtual void HandleOnCardEndDraging (CardController card, Vector3 mousePosition)
+	{
+		this.SortCardInZone(true);
+	}
+	
+	protected virtual void HandleOnCardStartDraging (CardController card, Vector3 mousePosition)
+	{
+
+	}
+
+
+
+	#endregion
 
 }

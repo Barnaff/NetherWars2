@@ -2,8 +2,14 @@
 using System.Collections;
 using NetherWars;
 
+
 public class CardController : MonoBehaviour {
 
+
+	#region Serialized fields
+	 
+	[SerializeField]
+	private GameObject _cardContainer;
 
 	[SerializeField]
 	private GameObject _frame;
@@ -32,28 +38,49 @@ public class CardController : MonoBehaviour {
 	[SerializeField]
 	private TextMesh _nameLabel;
 
-
 	[SerializeField]
 	private bool _isFlipped;
+
+	#endregion
+
+
+	#region Private
 	
 	private NWCard _card;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+	#endregion
 
+
+	#region Card Events
+
+	public delegate void CardHoverDelegate(CardController card);
+	public delegate void CardEndHoverDelegate(CardController card);
+	public delegate void CardClickedDelegate(CardController card);
+	public delegate void CardIsDraggedDelegate(CardController card, Vector3 mousePosition);
+	public delegate void CardBeginDragingDelegate(CardController card, Vector3 mousePosition);
+	public delegate void CardEndDragingDelegate(CardController card, Vector3 mousePosition);
+
+	public event CardHoverDelegate OnCardHover;
+	public event CardEndHoverDelegate OnCardEndHover;
+	public event CardClickedDelegate OnCardClicked;
+	public event CardIsDraggedDelegate OnCardIsDragged;
+	public event CardBeginDragingDelegate OnCardStartDraging;
+	public event CardEndDragingDelegate OnCardEndDraging;
+
+	#endregion
+
+	#region Initialization
+	
 	public void SetCard(NWCard card)
 	{
 		_card = card;
 		UpdateCard();
 	}
 
+	#endregion
+
+
+	#region Setters
 
 	public bool IsFlipped {
 		get {
@@ -63,7 +90,7 @@ public class CardController : MonoBehaviour {
 			_isFlipped = value;
 			if (_isFlipped)
 			{
-				this.transform.localRotation = Quaternion.Euler(new Vector3(270, 180, 0));
+				_cardContainer.transform.localRotation = Quaternion.Euler(new Vector3(90, -180, 0));
 				_manaCostLabel.gameObject.SetActive(false);
 				_manaGainLabel.gameObject.SetActive(false);
 				_powerLabel.gameObject.SetActive(false);
@@ -73,7 +100,7 @@ public class CardController : MonoBehaviour {
 			}
 			else
 			{
-				this.transform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
+				_cardContainer.transform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
 				_manaCostLabel.gameObject.SetActive(true);
 				_manaGainLabel.gameObject.SetActive(true);
 				_powerLabel.gameObject.SetActive(true);
@@ -83,6 +110,24 @@ public class CardController : MonoBehaviour {
 			}
 		}
 	}
+
+	#endregion
+
+
+	#region Getters
+	
+	public int UniqueId
+	{
+		get
+		{
+			return _card.CardUniqueID;
+		}
+	}
+	
+	#endregion
+
+
+	#region Private
 
 	private void UpdateCard()
 	{
@@ -94,14 +139,56 @@ public class CardController : MonoBehaviour {
 		_nameLabel.text = _card.CardName;
 	}
 
+	#endregion
 
-	#region Getters
 
-	public int UniqueId
+	#region Public - User Interactions
+
+	public void CardHover()
 	{
-		get
+		if (OnCardHover != null)
 		{
-			return _card.CardUniqueID;
+			OnCardHover(this);
+		}
+	}
+
+	public void CardEndHover()
+	{
+		if (OnCardEndHover != null)
+		{
+			OnCardEndHover(this);
+		}
+	}
+
+	public void CardClicked()
+	{
+		if (OnCardClicked != null)
+		{
+			OnCardClicked(this);
+		}
+	}
+
+	public void CardDragged(Vector3 mousePosition)
+	{
+		if (OnCardIsDragged != null)
+		{
+			OnCardIsDragged(this, mousePosition);
+		}
+	}
+
+	public void CardStartDraging(Vector3 mousePosition)
+	{
+		if (OnCardStartDraging != null)
+		{
+			OnCardStartDraging(this, mousePosition);
+		}
+	}
+
+	public void CardEndDraging(Vector3 mousePosition)
+	{
+		if (OnCardEndDraging != null)
+		{
+			OnCardEndDraging(this, mousePosition);
 		}
 	}
 

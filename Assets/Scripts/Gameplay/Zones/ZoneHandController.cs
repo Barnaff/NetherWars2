@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ZoneHandController : ZoneControllerAbstract {
 
@@ -10,7 +11,7 @@ public class ZoneHandController : ZoneControllerAbstract {
 		cardController.IsFlipped = false;
 		cardController.transform.SetParent(this.transform);
 
-		SortCardsPositions();
+		SortCardInZone(true);
 
 	}
 
@@ -18,13 +19,23 @@ public class ZoneHandController : ZoneControllerAbstract {
 
 	void Start()
 	{
-		SortCardsPositions();
+		List<CardController> tmpCardsList = new List<CardController>();
+		tmpCardsList.AddRange(_cardsInZone);
+		_cardsInZone.Clear();
+
+		foreach (CardController card in tmpCardsList)
+		{
+			AddCardToZone(card);
+		}
+	
+		SortCardInZone(true);
 	}
 
 	float _distanceBtweenCards = 1.5f;
 
-	private void SortCardsPositions()
+	protected override void SortCardInZone (bool animated)
 	{
+
 		float radius = _cardsInZone.Count * _distanceBtweenCards;
 		Vector3 center = this.transform.localPosition;
 		center.z -= radius - 0.5f;
@@ -35,27 +46,44 @@ public class ZoneHandController : ZoneControllerAbstract {
 		for (int i=0; i< _cardsInZone.Count; i++)
 		{
 			CardController cardController = _cardsInZone[i];
-			cardController.transform.SetParent(this.transform);
+			//cardController.transform.SetParent(this.transform);
 			if (cardController != null)
 			{
 				float posX = center.x + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
 				float posZ = center.z + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
 				
-				Vector3 position = new Vector3(posX, this.transform.localPosition.y, posZ);
+				Vector3 position = new Vector3(posX, 0, posZ);
 				cardController.transform.localPosition = position;
 				
-				Vector3 rotation = cardController.transform.rotation.eulerAngles;
-				rotation.z = angle - 90.0f;
-				cardController.transform.localRotation = Quaternion.Euler(rotation);
-				
+				//Vector3 rotation = cardController.transform.rotation;
+				//rotation.z = angle - 90.0f;
+
+				//cardController.transform.localRotation.eulerAngles = rotation;
+				cardController.transform.localRotation = Quaternion.AngleAxis(90.0f - angle, Vector3.up);
+				Debug.Log(">>>> " + angle + " , " + cardController.transform.localRotation.eulerAngles.z);
 				angle -= angleDistance;
+
 			}
-		
-
-
 		}
 	}
 
 
+	#region Handle cards events
+
+	protected override void HandleOnCardHover (CardController card)
+	{
+		base.HandleOnCardHover (card);
+		card.transform.localScale = new Vector3(1.2f,1.2f,1.2f);
+		card.transform.localPosition = new Vector3(card.transform.localPosition.x, 0.1f, card.transform.localPosition.z);
+	}
+
+	protected override void HandleOnCardEndHover (CardController card)
+	{
+		base.HandleOnCardEndHover (card);
+		card.transform.localScale = new Vector3(1f,1f,1f);
+		card.transform.localPosition = new Vector3(card.transform.localPosition.x, 0, card.transform.localPosition.z);
+	}
+
+	#endregion
 
 }

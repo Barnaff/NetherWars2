@@ -9,7 +9,10 @@ public class ZoneLibraryController : ZoneControllerAbstract {
 	{
 		throw new System.NotImplementedException ();
 	}
-
+	protected override void SortCardInZone (bool animated)
+	{
+		throw new System.NotImplementedException ();
+	}
 	#endregion
 
 
