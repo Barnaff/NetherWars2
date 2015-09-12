@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ZoneLibraryController : ZoneControllerAbstract {
 
@@ -7,14 +8,38 @@ public class ZoneLibraryController : ZoneControllerAbstract {
 
 	protected override void PlaceCardInZone (CardController cardController, bool animated = true)
 	{
-		throw new System.NotImplementedException ();
+		cardController.IsFlipped = true;
+		cardController.transform.SetParent(this.transform);
+
+		SortCardInZone(true);
 	}
+
+
 	protected override void SortCardInZone (bool animated)
 	{
-		throw new System.NotImplementedException ();
+		for (int i = _cardsInZone.Count - 1 ; i >= 0 ; i--)
+		{
+			CardController card = _cardsInZone[i];
+
+			Vector3 position = Vector3.zero;
+			position.y += i * 0.01f;
+			card.transform.localPosition = position;
+			card.transform.localRotation = Quaternion.Euler(card.transform.localRotation.eulerAngles.x,0,card.transform.localRotation.eulerAngles.z);
+		}
 	}
+
 	#endregion
 
 
-
+	void Start()
+	{
+		List<CardController> tmpCardsList = new List<CardController>();
+		tmpCardsList.AddRange(_cardsInZone);
+		_cardsInZone.Clear();
+		
+		foreach (CardController card in tmpCardsList)
+		{
+			AddCardToZone(card);
+		}
+	}
 }

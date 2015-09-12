@@ -46,7 +46,6 @@ public class ZoneHandController : ZoneControllerAbstract {
 		for (int i=0; i< _cardsInZone.Count; i++)
 		{
 			CardController cardController = _cardsInZone[i];
-			//cardController.transform.SetParent(this.transform);
 			if (cardController != null)
 			{
 				float posX = center.x + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
@@ -54,13 +53,7 @@ public class ZoneHandController : ZoneControllerAbstract {
 				
 				Vector3 position = new Vector3(posX, 0, posZ);
 				cardController.transform.localPosition = position;
-				
-				//Vector3 rotation = cardController.transform.rotation;
-				//rotation.z = angle - 90.0f;
-
-				//cardController.transform.localRotation.eulerAngles = rotation;
 				cardController.transform.localRotation = Quaternion.AngleAxis(90.0f - angle, Vector3.up);
-				Debug.Log(">>>> " + angle + " , " + cardController.transform.localRotation.eulerAngles.z);
 				angle -= angleDistance;
 
 			}

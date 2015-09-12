@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour {
 	private Dictionary<int, CardController> _playerCardsDictionary = new Dictionary<int, CardController>();
 
 
-	private CardController _mouseOverCard = null;
+	private CardController _selectedCard = null;
 
 	private CardController _draggedCard = null;
 
@@ -55,58 +55,80 @@ public class PlayerController : MonoBehaviour {
 			ray = _playerCamera.ScreenPointToRay(Input.mousePosition);
 			if(Physics.Raycast(ray, out hit))
 			{
+				//Debug.Log("hit: " + hit.collider.name);
+
 				CardController cardController = hit.collider.gameObject.GetComponent<CardController>();
 
-				if (_mouseOverCard != null && cardController != _mouseOverCard)
+				if (_selectedCard != null && cardController != _selectedCard)
 				{
-					_mouseOverCard.CardEndHover();
-					_mouseOverCard = null;
+					_selectedCard.CardEndHover();
+					_selectedCard = null;
 					
 				}
 
-				if (cardController != null && cardController != _mouseOverCard)
+				if (cardController != null && cardController != _selectedCard)
 				{
 					cardController.CardHover();
-					_mouseOverCard = cardController; 
+					_selectedCard = cardController; 
 				}
 
 
 			}
 
-			if (hit.collider == null && _mouseOverCard != null)
+			if (hit.collider == null && _selectedCard != null)
 			{
-				_mouseOverCard.CardEndHover();
-				_mouseOverCard = null;
+				_selectedCard.CardEndHover();
+				_selectedCard = null;
 			}
 
 			if (Input.GetMouseButtonDown(0))
 			{
 				// mouse down
-				if (_mouseOverCard != null)
+				if (_selectedCard != null)
 				{
-					_screenPoint = Camera.main.WorldToScreenPoint(_mouseOverCard.transform.position);
-					_offset = _mouseOverCard.transform.position - _playerCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z));
-					_mouseOverCard.CardStartDraging(_offset);
+					_screenPoint = Camera.main.WorldToScreenPoint(_selectedCard.transform.position);
+					_offset = _selectedCard.transform.position - _playerCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z));
+					_selectedCard.CardStartDraging(_offset);
 				}
 			}
 
 			if (Input.GetMouseButtonUp(0))
 			{
 				// mouse up
-				Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z);
-				Vector3 curPosition = _playerCamera.ScreenToWorldPoint(curScreenPoint);
-				_mouseOverCard.CardEndDraging(curPosition);
+				Debug.Log("mouse up");
+				if (_selectedCard != null)
+				{
+					ZoneControllerAbstract releasedInZone = null;
+					if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Zones")))
+					{
+						releasedInZone = hit.collider.gameObject.GetComponent<ZoneControllerAbstract>();
+					}
+
+					if (releasedInZone != null)
+					{
+						CardAttemtToMoveToZone(_selectedCard, releasedInZone);
+					}
+					else
+					{
+						Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z);
+						Vector3 curPosition = _playerCamera.ScreenToWorldPoint(curScreenPoint);
+						_selectedCard.CardEndDraging(curPosition);
+
+					}
+
+					_selectedCard = null;
+				}
 			}
 
 			if (Input.GetMouseButton(0))
 			{
 				// mouse drag
 
-				if (_mouseOverCard != null)
+				if (_selectedCard != null)
 				{
 					Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z);
 					Vector3 curPosition = _playerCamera.ScreenToWorldPoint(curScreenPoint);
-					_mouseOverCard.CardDragged(curPosition);
+					_selectedCard.CardDragged(curPosition);
 				}
 			}
 		}
@@ -137,7 +159,7 @@ public class PlayerController : MonoBehaviour {
 
 		if (zone == eZoneType.Library)
 		{
-			PlaceCardInLibrary(card);
+			_libraryContainer.AddCardToZone(card);
 		}
 		else
 		{
@@ -150,15 +172,25 @@ public class PlayerController : MonoBehaviour {
 	#endregion
 
 
-	#region private
+	#region User Interactions
 
-	private void PlaceCardInLibrary(CardController card, bool animated = false)
+	private void CardAttemtToMoveToZone(CardController card, ZoneControllerAbstract zone)
 	{
-		card.IsFlipped = true;
-		Vector3 position = _libraryContainer.gameObject.transform.position;
-		position.y += _playerCardsDictionary.Count * 0.01f;
-		card.transform.position = position;
+		switch (zone.Zone.Type)
+		{
+		case eZoneType.Battlefield:
+		{
+
+			break;
+		}
+		default:
+		{
+			break;
+		}
+		}
 	}
 
 	#endregion
+
+
 }
