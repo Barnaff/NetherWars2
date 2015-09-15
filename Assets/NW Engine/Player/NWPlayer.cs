@@ -4,15 +4,26 @@ using System.Collections.Generic;
 
 namespace NetherWars
 {
+	[System.Serializable]
 	public class NWPlayer : NetherWars.INWPlayer, NetherWars.INWNetworkObject 
 	{
-		
+
+		[SerializeField]
 		private int _playerId;
+
+		[SerializeField]
 		private string _playerName;
+
+		[SerializeField]
 		private int[] _deckCards;
 
+		[SerializeField]
 		private NWLibrary _library;
+
+		[SerializeField]
 		private NWHand _hand;
+
+		[SerializeField]
 		private NWBattlefield _battlefield;
 
 		private static Dictionary<int, NWPlayer> _cachedPlayers = new Dictionary<int, NWPlayer>();

@@ -20,11 +20,11 @@ public class ZoneLibraryController : ZoneControllerAbstract {
 		for (int i = _cardsInZone.Count - 1 ; i >= 0 ; i--)
 		{
 			CardController card = _cardsInZone[i];
-
 			Vector3 position = Vector3.zero;
-			position.y += i * 0.01f;
+			position.y += i * 0.05f;
 			card.transform.localPosition = position;
 			card.transform.localRotation = Quaternion.Euler(card.transform.localRotation.eulerAngles.x,0,card.transform.localRotation.eulerAngles.z);
+			card.IsFlipped = true;
 		}
 	}
 

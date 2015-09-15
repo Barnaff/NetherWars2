@@ -20,7 +20,8 @@ public class GameplayController : MonoBehaviour {
 
 	private Dictionary<NWZone, ZoneControllerAbstract> _zonesIngames = new Dictionary<NWZone, ZoneControllerAbstract>();
 
-	private INWPlayer _currentPlayer;
+	[SerializeField]
+	private NWPlayer _currentPlayer;
 
 	// Use this for initialization
 	void Start () {
@@ -49,7 +50,7 @@ public class GameplayController : MonoBehaviour {
 		_currentPlayer = new NWPlayer();
 		_currentPlayer.PlayerName = "Test Player";
 		_currentPlayer.PlayerID = (int)Random.Range(1,1000);
-		_currentPlayer.DeckCards = new int[10]{1,1,1,2,2,2,3,3,3,4};
+		_currentPlayer.DeckCards = new int[30]{1,1,1,2,2,2,3,3,3,4,1,1,1,2,2,2,3,3,3,4,1,1,1,2,2,2,3,3,3,4};
 
 		// set the player in the server
 		networkManager.SetPlayer(_currentPlayer);
@@ -61,10 +62,7 @@ public class GameplayController : MonoBehaviour {
 		_netherWarsEngine.OnGameInitialized += HandleOnGameInitialized;
 		NWEventDispatcher.Instance().OnCardChangeZone += HandleOnCardChangeZone;
 		NWEventDispatcher.Instance().OnStartTurn += HandleOnStartTurn;
-		_player1Controller.SetPlayer(_currentPlayer);
 
-		_player1Controller.OnCanPlayCard += HandleOnCanPlayCard;
-		_player1Controller.OnPlayCard += HandlePlayCard;
 	}
 
 	#region Events
@@ -98,8 +96,10 @@ public class GameplayController : MonoBehaviour {
 			playerController.SetActivePlayer(false);
 			if (player.PlayerID == _currentPlayer.PlayerID)
 			{
-				_currentPlayer = player;
+				_currentPlayer = (NWPlayer)player;
 				playerController.SetActivePlayer(true);
+				playerController.OnCanPlayCard += HandleOnCanPlayCard;
+				playerController.OnPlayCard += HandlePlayCard;
 			}
 
 			foreach (NWCard cardData in player.Library.Cards)
@@ -152,7 +152,7 @@ public class GameplayController : MonoBehaviour {
 
 	void HandleOnStartTurn (INWPlayer player)
 	{
-		
+		Debug.Log("start turn for player: " + player.PlayerID);
 	}
 
 

@@ -12,6 +12,7 @@ namespace NetherWars
 	public delegate void CardDrawDelegate(INWPlayer player, NWCard card);
 	public delegate void CardChangeZoneDelegate(NWCard card, NWZone fromZone, NWZone toZone);
 	public delegate void StartTurnDelegate(INWPlayer player);
+	public delegate void StartGameDelegate();
 
 	#endregion
 
@@ -25,6 +26,7 @@ namespace NetherWars
 		event CardDrawDelegate OnCardDraw;
 		event CardChangeZoneDelegate OnCardChangeZone;
 		event StartTurnDelegate OnStartTurn;
+		event StartGameDelegate OnStartGame;
 
 		#endregion
 

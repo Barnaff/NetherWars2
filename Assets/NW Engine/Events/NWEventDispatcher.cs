@@ -14,7 +14,7 @@ namespace NetherWars
 		public event CardDrawDelegate OnCardDraw;
 		public event CardChangeZoneDelegate OnCardChangeZone;
 		public event StartTurnDelegate OnStartTurn;
-
+		public event StartGameDelegate OnStartGame;
 
 		#endregion
 
@@ -89,6 +89,11 @@ namespace NetherWars
 				StartTurn(player);
 				break;
 			}
+			case NWEventType.StartGame:
+			{
+				StartGame();
+				break;
+			}
 			default:
 			{
 				Debug.LogError("ERROR - Unrecognized Event Type!");
@@ -97,9 +102,12 @@ namespace NetherWars
 			}
 			
 			string eventString = "[" + eventObject.Type.ToString() + "] ";
-			foreach (int key in eventObject.Data.Keys)
+			if (eventObject.Data != null)
 			{
-				eventString += key + ": " + eventObject.Data[key].ToString() + ", ";
+				foreach (int key in eventObject.Data.Keys)
+				{
+					eventString += key + ": " + eventObject.Data[key].ToString() + ", ";
+				}
 			}
 			Debug.Log(eventString);
 		}
@@ -138,6 +146,14 @@ namespace NetherWars
 			if (OnStartTurn != null)
 			{
 				OnStartTurn(player);
+			}
+		}
+
+		private void StartGame()
+		{
+			if (OnStartGame != null)
+			{
+				OnStartGame();
 			}
 		}
 

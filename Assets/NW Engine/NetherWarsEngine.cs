@@ -32,6 +32,8 @@ namespace NetherWars
 
 		private INWPlayer _player;
 
+		private INWPlayer _currentPlayer;
+
 		private NWGameSetupDataObject _cardsDictionary;
 
 		private List<INWPlayer> _players;
@@ -159,24 +161,52 @@ namespace NetherWars
 			}
 		}
 
+		private INWPlayer OpponentOfPlayer(INWPlayer player)
+		{
+			foreach (INWPlayer opponent in _players)
+			{
+				if (opponent != player)
+				{
+					return opponent;
+				}
+			}
+			return null;
+		}
+
 		#endregion
 
 
 		#region Game phases - Server
 
-		private void StartTurn()
+		private void StartGameplay()
 		{
+			_eventDispatcher.DispatchEvent(NWEvent.StartGame());
 			// check if its the first turn - draw hands for the players
 			if (_turnCount == 0)
 			{
+				StartTurn();
 
-
-				_eventDispatcher.DispatchEvent(NWEvent.StartTurn(_player));
 				foreach (INWPlayer player in _players)
 				{
 					player.DrawCards(7);
 				}
 			}
+		}
+
+		private void StartTurn()
+		{
+			INWPlayer playerTurn = null;
+			if (_turnCount == 0)
+			{
+				INWPlayer firstPlayer = _players[Random.Range(0,_players.Count)];
+			}
+
+			if (playerTurn == null)
+			{
+				playerTurn = OpponentOfPlayer(_currentPlayer);
+			}
+
+			_eventDispatcher.DispatchEvent(NWEvent.StartTurn(playerTurn));
 		}
 
 		#endregion
@@ -286,7 +316,7 @@ namespace NetherWars
 				SetPlayersDecks(serverAction.ActionsParams);
 				if (_networkManager.IsServer)
 				{
-					StartTurn();
+					StartGameplay();
 				}
 				break;
 			}
@@ -309,15 +339,21 @@ namespace NetherWars
 		{
 			switch (gameplayEvent.Type)
 			{
+			case NWEventType.StartGame:
+			{
+				if (OnGameInitialized != null)
+				{
+					OnGameInitialized(_players);
+				}
+				if (_networkManager.IsServer)
+				{
+					StartTurn();
+				}
+				break;
+			}
 			case NWEventType.StartTurn:
 			{
-				if (_turnCount == 0)
-				{
-					if (OnGameInitialized != null)
-					{
-						OnGameInitialized(_players);
-					}
-				}
+
 				_turnCount++;
 				break;
 			}

@@ -34,7 +34,8 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField]
 	private bool _isActivePlayer;
 
-	private INWPlayer _player;
+	[SerializeField]
+	private NWPlayer _player;
 
 	[SerializeField]
 	private Dictionary<int, CardController> _playerCardsDictionary = new Dictionary<int, CardController>();
@@ -59,14 +60,7 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 	
-		if (!_isActivePlayer)
-		{
-			Collider[] colliders = this.gameObject.GetComponentsInChildren<Collider>();
-			for (int i=0; i< colliders.Length; i++)
-			{
-				colliders[i].enabled = false;
-			}
-		}
+
 
 	}
 	
@@ -88,8 +82,7 @@ public class PlayerController : MonoBehaviour {
 				if (_selectedCard != null && cardController != _selectedCard)
 				{
 					_selectedCard.CardEndHover();
-					_selectedCard = null;
-					
+					_selectedCard = null;	
 				}
 
 				if (cardController != null && cardController != _selectedCard)
@@ -97,8 +90,6 @@ public class PlayerController : MonoBehaviour {
 					cardController.CardHover();
 					_selectedCard = cardController; 
 				}
-
-
 			}
 
 			if (hit.collider == null && _selectedCard != null)
@@ -166,7 +157,7 @@ public class PlayerController : MonoBehaviour {
 
 	public void SetPlayer(INWPlayer player)
 	{
-		_player = player;
+		_player = (NWPlayer)player;
 
 		_battlefieldContainer.SetZone(_player.Battlefield, _player);
 		_libraryContainer.SetZone(_player.Library, _player);
@@ -176,7 +167,24 @@ public class PlayerController : MonoBehaviour {
 
 	public void SetActivePlayer(bool isActivePlayer)
 	{
+		_isActivePlayer = isActivePlayer;
 		_playerCamera.gameObject.SetActive(isActivePlayer);
+		if (!_isActivePlayer)
+		{
+			Collider[] colliders = this.gameObject.GetComponentsInChildren<Collider>();
+			for (int i=0; i< colliders.Length; i++)
+			{
+				colliders[i].enabled = false;
+			}
+		}
+		else
+		{
+			Collider[] colliders = this.gameObject.GetComponentsInChildren<Collider>();
+			for (int i=0; i< colliders.Length; i++)
+			{
+				colliders[i].enabled = true;
+			}
+		}
 	}
 
 	public void AddCard(CardController card, eZoneType zone = eZoneType.Library)
@@ -192,7 +200,7 @@ public class PlayerController : MonoBehaviour {
 			Debug.LogError("Unsupported zone to add card!");
 		}
 
-		card.transform.SetParent(this.gameObject.transform);
+		//card.transform.SetParent(this.gameObject.transform);
 	}
 
 	#endregion
@@ -217,7 +225,7 @@ public class PlayerController : MonoBehaviour {
 		case eZoneType.ResourcePool:
 		{
 			ZoneControllerAbstract lastZone = CurrentZoneForCard(card);
-			if (lastZone != zone)
+			if (lastZone != null && lastZone != zone)
 			{
 				lastZone.RemoveCardFromZone(card);
 			}

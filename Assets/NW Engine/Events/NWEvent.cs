@@ -10,6 +10,7 @@ namespace NetherWars
 	    PlayCard,
 	    DrawCard,
 	    CardChangeZone,
+		StartGame,
 	    StartTurn,
 	    CardAttemptToChangeZone
 	}
@@ -120,6 +121,12 @@ namespace NetherWars
 			Hashtable data = new Hashtable();
 			data.Add((int)eEventField.Player, player.PlayerID);
 			NWEvent eventObject = new NWEvent(NWEventType.StartTurn, data);
+			return eventObject;
+		}
+
+		public static NWEvent StartGame()
+		{
+			NWEvent eventObject = new NWEvent(NWEventType.StartGame);
 			return eventObject;
 		}
 
