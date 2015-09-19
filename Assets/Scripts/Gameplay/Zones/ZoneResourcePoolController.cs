@@ -17,7 +17,8 @@ public class ZoneResourcePoolController : ZoneControllerAbstract {
 	{
 		foreach (CardController card in _cardsInZone)
 		{
-			card.gameObject.transform.localPosition = Vector3.zero;
+			card.gameObject.transform.localPosition = new Vector3(0, 1.0f, 0);
+			card.transform.localRotation = Quaternion.AngleAxis(0, Vector3.up);
 		}
 	}
 

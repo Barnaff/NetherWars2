@@ -28,9 +28,10 @@ namespace NetherWars
 		NWLibrary Library { get; }
 
 		NWBattlefield Battlefield { get; }
-
+		 
 		NWHand Hand { get; }
 
+		NWResourcePool ResourcePool { get; }
 
 	}
 

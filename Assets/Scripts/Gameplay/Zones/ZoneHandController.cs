@@ -77,6 +77,17 @@ public class ZoneHandController : ZoneControllerAbstract {
 		card.transform.localPosition = new Vector3(card.transform.localPosition.x, 0, card.transform.localPosition.z);
 	}
 
+	protected override void HandleOnCardDragged (CardController card, Vector3 mousePosition)
+	{
+		card.transform.localRotation = Quaternion.Euler(card.transform.localRotation.eulerAngles.x,0,card.transform.localRotation.eulerAngles.z);
+		card.transform.position = mousePosition;
+	}
+	
+	protected override void HandleOnCardEndDraging (CardController card, Vector3 mousePosition)
+	{
+		this.SortCardInZone(true);
+	}
+
 	#endregion
 
 }

@@ -123,6 +123,14 @@ public class CardController : MonoBehaviour {
 			return _card.CardUniqueID;
 		}
 	}
+
+	public NWCard Card
+	{
+		get
+		{
+			return _card;
+		}
+	}
 	
 	#endregion
 

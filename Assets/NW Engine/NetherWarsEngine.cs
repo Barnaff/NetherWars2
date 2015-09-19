@@ -71,7 +71,17 @@ namespace NetherWars
 
 		public void PlayCard(INWPlayer player, NWCard card)
 		{
+			_eventDispatcher.DispatchEvent(NWEvent.CardChangeZone(card, player.Hand, player.Battlefield));
+		}
 
+		public bool CanPutCardInResources(INWPlayer player, NWCard card)
+		{
+			return true;
+		}
+
+		public void PutCardInResources(INWPlayer player, NWCard card)
+		{
+			_eventDispatcher.DispatchEvent(NWEvent.CardChangeZone(card, player.Hand, player.ResourcePool));
 		}
 
 
@@ -126,9 +136,11 @@ namespace NetherWars
 				NWZoneDataObject libraryZone = new NWZoneDataObject(player.PlayerID, player.Library.Type, player.Library.ZoneID);
 				NWZoneDataObject handZone = new NWZoneDataObject(player.PlayerID, player.Hand.Type, player.Hand.ZoneID);
 				NWZoneDataObject battlefieldZone = new NWZoneDataObject(player.PlayerID, player.Battlefield.Type, player.Battlefield.ZoneID);
+				NWZoneDataObject resourcePoolZone = new NWZoneDataObject(player.PlayerID, player.ResourcePool.Type, player.ResourcePool.ZoneID);
 				playersZones.Add(libraryZone);
 				playersZones.Add(handZone);
 				playersZones.Add(battlefieldZone);
+				playersZones.Add(resourcePoolZone);
 			}
 
 			NWGameSetupDataObject cardsDictionary = new NWGameSetupDataObject(playersDecks, playersZones);
@@ -297,6 +309,10 @@ namespace NetherWars
 						if (zoneData.ZoneType == eZoneType.Battlefield)
 						{
 							player.Battlefield.ZoneID = zoneData.ZoneId;
+						}
+						if (zoneData.ZoneType == eZoneType.ResourcePool)
+						{
+							player.ResourcePool.ZoneID = zoneData.ZoneId;
 						}
 					}
 					else

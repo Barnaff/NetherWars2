@@ -21,9 +21,11 @@ public class ZoneBattlefieldController : ZoneControllerAbstract {
 		{
 			CardController card = _cardsInZone[i];
 			posX += 2.5f;
-			Vector3 position = new Vector3(posX, 0, -0.5f);
+			Vector3 position = new Vector3(posX, 1.0f, 0);
 
 			card.transform.localPosition = position;
+
+			card.transform.localRotation = Quaternion.AngleAxis(0, Vector3.up);
 		}
 	}
 	#endregion

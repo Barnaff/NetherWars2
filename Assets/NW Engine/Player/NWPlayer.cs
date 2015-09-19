@@ -24,6 +24,9 @@ namespace NetherWars
 		private NWHand _hand;
 
 		[SerializeField]
+		private NWResourcePool _resourcePool;
+
+		[SerializeField]
 		private NWBattlefield _battlefield;
 
 		private static Dictionary<int, NWPlayer> _cachedPlayers = new Dictionary<int, NWPlayer>();
@@ -44,7 +47,7 @@ namespace NetherWars
 			_library = new NWLibrary();
 			_hand = new NWHand();
 			_battlefield = new NWBattlefield();
-
+			_resourcePool = new NWResourcePool();
 
 		}
 
@@ -140,6 +143,16 @@ namespace NetherWars
 			set
 			{
 				_hand = value;
+			}
+		}
+
+		public NetherWars.NWResourcePool ResourcePool {
+			get {
+				return _resourcePool;
+			}
+			set
+			{
+				_resourcePool = value;
 			}
 		}
 

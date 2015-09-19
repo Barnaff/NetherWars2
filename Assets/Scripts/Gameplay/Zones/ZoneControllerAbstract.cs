@@ -134,13 +134,12 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 
 	protected virtual void HandleOnCardDragged (CardController card, Vector3 mousePosition)
 	{
-		card.transform.localRotation = Quaternion.Euler(card.transform.localRotation.eulerAngles.x,0,card.transform.localRotation.eulerAngles.z);
-		card.transform.position = mousePosition;
+
 	}
 
 	protected virtual void HandleOnCardEndDraging (CardController card, Vector3 mousePosition)
 	{
-		this.SortCardInZone(true);
+
 	}
 	
 	protected virtual void HandleOnCardStartDraging (CardController card, Vector3 mousePosition)

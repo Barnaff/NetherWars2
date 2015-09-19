@@ -72,10 +72,16 @@ public class GameplayController : MonoBehaviour {
 		return _netherWarsEngine.CanPlayCard(null, null);
 	}
 
-	private void HandlePlayCard(PlayerController playerController, CardController card)
+	private void HandlePlayCard(PlayerController playerController, CardController cardController)
 	{
-		_netherWarsEngine.PlayCard(null, null);
+		_netherWarsEngine.PlayCard(playerController.Player, cardController.Card);
 	}
+
+	private void HandleOnPutCardInResource(PlayerController playerController, CardController cardController)
+	{
+		_netherWarsEngine.PutCardInResources(playerController.Player, cardController.Card);
+	}
+
 
 	void HandleOnGameInitialized (List<INWPlayer> players)
 	{
@@ -100,6 +106,7 @@ public class GameplayController : MonoBehaviour {
 				playerController.SetActivePlayer(true);
 				playerController.OnCanPlayCard += HandleOnCanPlayCard;
 				playerController.OnPlayCard += HandlePlayCard;
+				playerController.OnPutCardInResource += HandleOnPutCardInResource;
 			}
 
 			foreach (NWCard cardData in player.Library.Cards)

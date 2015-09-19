@@ -52,7 +52,6 @@ namespace NetherWars
 		{
 			_zoneID = NWZone._cachedZones.Count + 1;
 			NWZone._cachedZones.Add(_zoneID, this);
-			Debug.Log("added zone: " + Type + " id: " + _zoneID);
 		}
 		
 		public NWZone(eZoneType zone)

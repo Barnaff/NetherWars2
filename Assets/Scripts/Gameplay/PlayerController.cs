@@ -57,6 +57,19 @@ public class PlayerController : MonoBehaviour {
 
 	#endregion
 
+
+	#region Getters
+
+	public INWPlayer Player
+	{
+		get
+		{
+			return _player;
+		}
+	}
+
+	#endregion
+
 	// Use this for initialization
 	void Start () {
 	
@@ -112,7 +125,6 @@ public class PlayerController : MonoBehaviour {
 			if (Input.GetMouseButtonUp(0))
 			{
 				// mouse up
-				Debug.Log("mouse up");
 				if (_selectedCard != null)
 				{
 					ZoneControllerAbstract releasedInZone = null;
@@ -162,6 +174,7 @@ public class PlayerController : MonoBehaviour {
 		_battlefieldContainer.SetZone(_player.Battlefield, _player);
 		_libraryContainer.SetZone(_player.Library, _player);
 		_handContainer.SetZone(_player.Hand, _player);
+		_resourceZoneContainer.SetZone(_player.ResourcePool, _player);
 
 	}
 
@@ -214,22 +227,12 @@ public class PlayerController : MonoBehaviour {
 		{
 		case eZoneType.Battlefield:
 		{
-			ZoneControllerAbstract lastZone = CurrentZoneForCard(card);
-			if (lastZone != zone)
-			{
-				lastZone.RemoveCardFromZone(card);
-			}
-			zone.AddCardToZone(card);
+			PlayCard(card);
 			break;
 		}
 		case eZoneType.ResourcePool:
 		{
-			ZoneControllerAbstract lastZone = CurrentZoneForCard(card);
-			if (lastZone != null && lastZone != zone)
-			{
-				lastZone.RemoveCardFromZone(card);
-			}
-			zone.AddCardToZone(card);
+			PutCardInResource(card);
 			break;
 		}
 		default:
