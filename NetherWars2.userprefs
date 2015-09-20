@@ -1,12 +1,21 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Gameplay\Zones\ZoneLibraryController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Gameplay\Zones\ZoneResourcePoolController.cs">
     <Files>
-      <File FileName="Assets\Scripts\Gameplay\Zones\ZoneHandController.cs" Line="7" Column="2" />
-      <File FileName="Assets\Scripts\Gameplay\Zones\ZoneControllerAbstract.cs" Line="6" Column="1" />
-      <File FileName="Assets\Scripts\Gameplay\PlayerController.cs" Line="89" Column="3" />
-      <File FileName="Assets\Scripts\Gameplay\Zones\ZoneLibraryController.cs" Line="5" Column="2" />
-      <File FileName="Assets\Scripts\Gameplay\GameplayController.cs" Line="94" Column="44" />
+      <File FileName="Assets\Scripts\Gameplay\PlayerController.cs" Line="305" Column="23" />
+      <File FileName="Assets\Scripts\Gameplay\Zones\ZoneHandController.cs" Line="56" Column="94" />
+      <File FileName="Assets\Scripts\Gameplay\Zones\ZoneControllerAbstract.cs" Line="142" Column="3" />
+      <File FileName="Assets\Scripts\Gameplay\Zones\ZoneLibraryController.cs" Line="46" Column="2" />
+      <File FileName="Assets\Scripts\Gameplay\GameplayController.cs" Line="82" Column="27" />
+      <File FileName="Assets\NW Engine\NetherWarsEngine.cs" Line="143" Column="40" />
+      <File FileName="Assets\NW Engine\Player\NWPlayer.cs" Line="149" Column="35" />
+      <File FileName="Assets\Scripts\Gameplay\Cards\CardController.cs" Line="174" Column="4" />
+      <File FileName="Assets\Scripts\Gameplay\Zones\ZoneBattlefieldController.cs" Line="24" Column="49" />
+      <File FileName="Assets\NW Engine\Zones\NWZone.cs" Line="46" Column="13" />
+      <File FileName="Assets\NW Engine\Player\INWPlayer.cs" Line="34" Column="39" />
+      <File FileName="Assets\NW Engine\Data Objects\NWZoneDataObject.cs" Line="7" Column="2" />
+      <File FileName="Assets\NW Engine\Data Objects\NWGameSetupDataObject.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Gameplay\Zones\ZoneResourcePoolController.cs" Line="19" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

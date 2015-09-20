@@ -8,7 +8,7 @@ public class ZoneLibraryController : ZoneControllerAbstract {
 
 	protected override void PlaceCardInZone (CardController cardController, bool animated = true)
 	{
-		cardController.IsFlipped = true;
+		//cardController.IsFlipped = true;
 		cardController.transform.SetParent(this.transform);
 
 		SortCardInZone(true);
@@ -23,7 +23,7 @@ public class ZoneLibraryController : ZoneControllerAbstract {
 			Vector3 position = Vector3.zero;
 			position.y += i * 0.05f;
 			card.transform.localPosition = position;
-			card.transform.localRotation = Quaternion.Euler(card.transform.localRotation.eulerAngles.x,0,card.transform.localRotation.eulerAngles.z);
+			//card.transform.localRotation = Quaternion.Euler(card.transform.localRotation.eulerAngles.x,0,card.transform.localRotation.eulerAngles.z);
 			card.IsFlipped = true;
 		}
 	}
@@ -41,6 +41,8 @@ public class ZoneLibraryController : ZoneControllerAbstract {
 		{
 			AddCardToZone(card);
 		}
+
+		SortCardInZone(true);
 	}
 
 

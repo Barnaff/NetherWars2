@@ -8,7 +8,6 @@ public class ZoneHandController : ZoneControllerAbstract {
 
 	protected override void PlaceCardInZone (CardController cardController, bool animated = true)
 	{
-		cardController.IsFlipped = false;
 		cardController.transform.SetParent(this.transform);
 
 		SortCardInZone(true);
@@ -57,6 +56,7 @@ public class ZoneHandController : ZoneControllerAbstract {
 				angle -= angleDistance;
 
 			}
+			cardController.IsFlipped = false;
 		}
 	}
 

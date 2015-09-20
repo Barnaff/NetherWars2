@@ -70,11 +70,16 @@ public class CardController : MonoBehaviour {
 	#endregion
 
 	#region Initialization
-	
+
 	public void SetCard(NWCard card)
 	{
 		_card = card;
 		UpdateCard();
+	}
+
+	void Start()
+	{
+		IsFlipped = _isFlipped;
 	}
 
 	#endregion
@@ -90,7 +95,7 @@ public class CardController : MonoBehaviour {
 			_isFlipped = value;
 			if (_isFlipped)
 			{
-				_cardContainer.transform.localRotation = Quaternion.Euler(new Vector3(90, -180, 0));
+				_cardContainer.transform.localRotation = Quaternion.AngleAxis(90, Vector3.left);
 				_manaCostLabel.gameObject.SetActive(false);
 				_manaGainLabel.gameObject.SetActive(false);
 				_powerLabel.gameObject.SetActive(false);
@@ -100,7 +105,7 @@ public class CardController : MonoBehaviour {
 			}
 			else
 			{
-				_cardContainer.transform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
+				_cardContainer.transform.localRotation = Quaternion.AngleAxis(-90, Vector3.left);
 				_manaCostLabel.gameObject.SetActive(true);
 				_manaGainLabel.gameObject.SetActive(true);
 				_powerLabel.gameObject.SetActive(true);
