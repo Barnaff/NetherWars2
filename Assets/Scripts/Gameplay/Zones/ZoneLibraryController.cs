@@ -23,8 +23,8 @@ public class ZoneLibraryController : ZoneControllerAbstract {
 			Vector3 position = Vector3.zero;
 			position.y += i * 0.05f;
 			card.transform.localPosition = position;
-			//card.transform.localRotation = Quaternion.Euler(card.transform.localRotation.eulerAngles.x,0,card.transform.localRotation.eulerAngles.z);
-			card.IsFlipped = true;
+			card.transform.localRotation = Quaternion.Euler(card.transform.localRotation.eulerAngles.x,0,card.transform.localRotation.eulerAngles.z);
+			card.IsFlipped = !_canSeeCardsInZone;
 		}
 	}
 

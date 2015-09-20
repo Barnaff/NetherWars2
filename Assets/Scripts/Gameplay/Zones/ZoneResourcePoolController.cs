@@ -7,7 +7,6 @@ public class ZoneResourcePoolController : ZoneControllerAbstract {
 
 	protected override void PlaceCardInZone (CardController cardController, bool animated = true)
 	{
-		cardController.IsFlipped = false;
 		cardController.transform.SetParent(this.transform);
 		
 		SortCardInZone(true);
@@ -19,6 +18,10 @@ public class ZoneResourcePoolController : ZoneControllerAbstract {
 		{
 			card.gameObject.transform.localPosition = new Vector3(0, 1.0f, 0);
 			card.transform.localRotation = Quaternion.AngleAxis(0, Vector3.up);
+
+
+			card.IsFlipped = !_canSeeCardsInZone;
+
 		}
 	}
 

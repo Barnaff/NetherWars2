@@ -56,7 +56,9 @@ public class ZoneHandController : ZoneControllerAbstract {
 				angle -= angleDistance;
 
 			}
-			cardController.IsFlipped = false;
+
+			cardController.IsFlipped = !_canSeeCardsInZone;
+
 		}
 	}
 

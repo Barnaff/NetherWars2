@@ -17,6 +17,9 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 	[SerializeField]
 	protected List<CardController> _cardsInZone;
 
+	[SerializeField]
+	protected bool _canSeeCardsInZone;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -69,6 +72,14 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 		get
 		{
 			return _zoneType;
+		}
+	}
+
+	public bool CanSeeCardsInZone
+	{
+		set
+		{
+			_canSeeCardsInZone = value;
 		}
 	}
 

@@ -7,7 +7,6 @@ public class ZoneBattlefieldController : ZoneControllerAbstract {
 	#region implemented abstract members of ZoneControllerAbstract
 	protected override void PlaceCardInZone (CardController cardController, bool animated = true)
 	{
-		cardController.IsFlipped = false;
 		cardController.transform.SetParent(this.transform);
 		
 		SortCardInZone(true);
@@ -26,6 +25,8 @@ public class ZoneBattlefieldController : ZoneControllerAbstract {
 			card.transform.localPosition = position;
 
 			card.transform.localRotation = Quaternion.AngleAxis(0, Vector3.up);
+
+			card.IsFlipped = !_canSeeCardsInZone;
 		}
 	}
 	#endregion

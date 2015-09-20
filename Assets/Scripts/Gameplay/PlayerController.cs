@@ -220,12 +220,17 @@ public class PlayerController : MonoBehaviour {
 		_handContainer.SetZone(_player.Hand, _player);
 		_resourceZoneContainer.SetZone(_player.ResourcePool, _player);
 
+		_battlefieldContainer.CanSeeCardsInZone = true;
+		_libraryContainer.CanSeeCardsInZone = false;
+		_resourceZoneContainer.CanSeeCardsInZone = true;
 	}
 
 	public void SetActivePlayer(bool isActivePlayer)
 	{
 		_isActivePlayer = isActivePlayer;
 		_playerCamera.gameObject.SetActive(isActivePlayer);
+		_handContainer.CanSeeCardsInZone = _isActivePlayer;
+
 		if (!_isActivePlayer)
 		{
 			Collider[] colliders = this.gameObject.GetComponentsInChildren<Collider>();
