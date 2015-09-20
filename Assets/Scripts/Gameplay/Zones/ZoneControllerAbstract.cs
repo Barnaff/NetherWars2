@@ -40,12 +40,15 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 
 	public virtual void AddCardToZone(CardController card, bool animated = true)
 	{
-		_cardsInZone.Add(card);
-
-		this.PlaceCardInZone(card, animated);
-		RegisterToCardEvents(card);
-
-		SortCardInZone(animated);
+		if (card != null &&  !_cardsInZone.Contains(card))
+		{
+			_cardsInZone.Add(card);
+			
+			this.PlaceCardInZone(card, animated);
+			RegisterToCardEvents(card);
+			
+			SortCardInZone(animated);
+		}
 	}
 
 	public virtual void RemoveCardFromZone(CardController card)
