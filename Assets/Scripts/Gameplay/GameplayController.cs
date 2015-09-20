@@ -82,21 +82,30 @@ public class GameplayController : MonoBehaviour {
 		_netherWarsEngine.PutCardInResources(playerController.Player, cardController.Card);
 	}
 
+	private void HandleEndTurn(PlayerController player)
+	{
+		_netherWarsEngine.EndPlayerTurn(player.Player);
+	}
+	
 
 	void HandleOnGameInitialized (List<INWPlayer> players)
 	{
+
+		if (players[0].PlayerID > players[1].PlayerID)
+		{
+			_player1Controller.SetPlayer(players[0]);
+			_player2Controller.SetPlayer(players[1]);
+		}
+		else
+		{
+			_player2Controller.SetPlayer(players[0]);
+			_player1Controller.SetPlayer(players[1]);
+		}
+
 		for (int i=0 ; i< players.Count; i++)
 		{
 			INWPlayer player = players[i];
-			PlayerController playerController = null;
-			if (i == 0)
-			{
-				playerController = _player1Controller;
-			}
-			else
-			{
-				playerController = _player2Controller;
-			}
+			PlayerController playerController = PlayerControllerForPlayer(player);
 
 			playerController.SetPlayer(player);
 			playerController.SetActivePlayer(false);
@@ -107,6 +116,7 @@ public class GameplayController : MonoBehaviour {
 				playerController.OnCanPlayCard += HandleOnCanPlayCard;
 				playerController.OnPlayCard += HandlePlayCard;
 				playerController.OnPutCardInResource += HandleOnPutCardInResource;
+				playerController.OnEndTurn += HandleEndTurn;
 			}
 
 			foreach (NWCard cardData in player.Library.Cards)
@@ -160,8 +170,37 @@ public class GameplayController : MonoBehaviour {
 	void HandleOnStartTurn (INWPlayer player)
 	{
 		Debug.Log("start turn for player: " + player.PlayerID);
+		if (player == _player1Controller.Player)
+		{
+			_player2Controller.EndPlayerTurn();
+			_player1Controller.StartPlayerTurn();
+		}
+		else if (player == _player2Controller.Player)
+		{
+			_player1Controller.EndPlayerTurn();
+			_player2Controller.StartPlayerTurn();
+		}
 	}
 
+
+	#endregion
+
+
+	#region Utils
+
+	private PlayerController PlayerControllerForPlayer(INWPlayer player)
+	{
+		if (_player1Controller.Player == player)
+		{
+			return _player1Controller;
+		}
+
+		if (_player2Controller.Player == player)
+		{
+			return _player2Controller;
+		}
+		return null;
+	}
 
 	#endregion
 

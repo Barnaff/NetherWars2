@@ -50,6 +50,8 @@ namespace NetherWars
 		
 			_eventDispatcher = NWEventDispatcher.Instance();
 			_eventDispatcher.OnDispatchEvent += HandleOnDispatchEvent;
+			_eventDispatcher.OnEndTurn += HandleOnEndTurn;
+			_eventDispatcher.OnStartTurn += HandleOnStartTurn;
 			_networkManager = networkManager;
 			networkManager.OnJoinedGame += OnJoinedGameHandler;
 			networkManager.OnOtherPlayerJoined += OnOtherPlayerJoinedHandler;
@@ -57,7 +59,6 @@ namespace NetherWars
 			networkManager.OnReciveAction += OnReciveActionHandler;
 			_player = player;
 		}
-
 
 		#endregion
 
@@ -82,6 +83,11 @@ namespace NetherWars
 		public void PutCardInResources(INWPlayer player, NWCard card)
 		{
 			_eventDispatcher.DispatchEvent(NWEvent.CardChangeZone(card, player.Hand, player.ResourcePool));
+		}
+
+		public void EndPlayerTurn(INWPlayer player)
+		{
+			_eventDispatcher.DispatchEvent(NWEvent.EndTurn(player));
 		}
 
 
@@ -123,7 +129,7 @@ namespace NetherWars
 				{
 					NWCardDataObject cardData = new NWCardDataObject(card.CardUniqueID, card.CardID);
 					cardsList.Add(cardData);
-
+					card.Controller = player;
 					if (OnCardCreated != null)
 					{
 						OnCardCreated(card);
@@ -185,6 +191,18 @@ namespace NetherWars
 			return null;
 		}
 
+		private INWPlayer PlayerForPlayerId(int playerId)
+		{
+			foreach (INWPlayer player in _players)
+			{
+				if (player.PlayerID == playerId)
+				{
+					return player;
+				}
+			}
+			return null;
+		}
+
 		#endregion
 
 
@@ -205,20 +223,23 @@ namespace NetherWars
 			}
 		}
 
-		private void StartTurn()
+		private void StartTurn(INWPlayer playerTurn = null)
 		{
-			INWPlayer playerTurn = null;
-			if (_turnCount == 0)
+			if (_networkManager.IsServer)
 			{
-				INWPlayer firstPlayer = _players[Random.Range(0,_players.Count)];
-			}
+				if (playerTurn != null)
+				{
 
-			if (playerTurn == null)
-			{
-				playerTurn = OpponentOfPlayer(_currentPlayer);
+				}
+				else
+				{
+					if (_turnCount == 0)
+					{
+						playerTurn = _players[Random.Range(0,_players.Count)];
+					}
+				}
+				_eventDispatcher.DispatchEvent(NWEvent.StartTurn(playerTurn));
 			}
-
-			_eventDispatcher.DispatchEvent(NWEvent.StartTurn(playerTurn));
 		}
 
 		#endregion
@@ -279,9 +300,11 @@ namespace NetherWars
 
 				foreach (NWPlayerDeckDataObject deck in _cardsDictionary.PlayersDecks)
 				{
+					INWPlayer player = PlayerForPlayerId(deck.PlayerId);
 					foreach (NWCardDataObject cardData in deck.Cards)
 					{
 						NWCard card = NWCardsLoader.LoadCard(cardData.CardId, cardData.CardUniqueId);
+						card.Controller = player;
 						if (OnCardCreated != null)
 						{
 							OnCardCreated(card);
@@ -361,16 +384,18 @@ namespace NetherWars
 				{
 					OnGameInitialized(_players);
 				}
-				if (_networkManager.IsServer)
-				{
-					StartTurn();
-				}
+//				if (_networkManager.IsServer)
+//				{
+//					StartTurn();
+//				}
 				break;
 			}
 			case NWEventType.StartTurn:
 			{
-
-				_turnCount++;
+				break;
+			}
+			case NWEventType.EndTurn:
+			{
 				break;
 			}
 			default:
@@ -384,6 +409,24 @@ namespace NetherWars
 		void HandleOnDispatchEvent (NWEvent eventObject)
 		{
 			_networkManager.SendAction(eventObject.ToServerAction());
+		}
+
+		void HandleOnStartTurn (INWPlayer player)
+		{
+			_turnCount++;
+			if (_networkManager.IsServer)
+			{
+				player.DrawCards(1);
+			}
+		}
+
+		void HandleOnEndTurn (INWPlayer player)
+		{
+			if (_networkManager.IsServer)
+			{
+				INWPlayer opponent = OpponentOfPlayer(player);
+				StartTurn(opponent);
+			}
 		}
 
 		#endregion

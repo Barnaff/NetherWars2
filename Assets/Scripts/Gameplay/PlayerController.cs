@@ -8,6 +8,7 @@ public delegate bool CanPlayCardDelegate(PlayerController playerController, Card
 public delegate void PlayCardDelegate(PlayerController playerController, CardController card);
 public delegate bool CanPutInResourceDelegate(PlayerController playerController, CardController card);
 public delegate void PutCardInResourceDelegate(PlayerController playerController, CardController card);
+public delegate void EndTurnDelegate(PlayerController playerController);
 
 
 public class PlayerController : MonoBehaviour {
@@ -48,12 +49,15 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 _screenPoint;
 	private Vector3 _offset;
 
+	private bool _isCurrentTurn;
+
 	#region Events
 
 	public CanPlayCardDelegate OnCanPlayCard;
 	public PlayCardDelegate OnPlayCard; 
 	public CanPutInResourceDelegate OnCanPutInResource;
 	public PutCardInResourceDelegate OnPutCardInResource;
+	public EndTurnDelegate OnEndTurn;
 
 	#endregion
 
@@ -76,6 +80,25 @@ public class PlayerController : MonoBehaviour {
 
 
 	}
+
+	void OnGUI()
+	{
+		if (_isActivePlayer)
+		{
+			if (_isCurrentTurn)
+			{
+				if (GUILayout.Button("End Turn"))
+				{
+					FinishTurn();
+				}
+			}
+			else
+			{
+				GUILayout.Label("Waiting For Opponent to finish his turn");
+			}
+		
+		}
+	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -92,17 +115,33 @@ public class PlayerController : MonoBehaviour {
 
 				CardController cardController = hit.collider.gameObject.GetComponent<CardController>();
 
-				if (_selectedCard != null && cardController != _selectedCard)
+				if (cardController != null)
 				{
-					_selectedCard.CardEndHover();
-					_selectedCard = null;	
+					if (cardController.Card != null && cardController.Card.Controller == _player)
+					{
+						// my card
+
+
+						if (_selectedCard != null && cardController != _selectedCard)
+						{
+							_selectedCard.CardEndHover();
+							_selectedCard = null;	
+						}
+						
+						if (cardController != null && cardController != _selectedCard)
+						{
+							cardController.CardHover();
+							_selectedCard = cardController; 
+						}
+						
+					}
+					else
+					{
+						// opponent card
+					}
 				}
 
-				if (cardController != null && cardController != _selectedCard)
-				{
-					cardController.CardHover();
-					_selectedCard = cardController; 
-				}
+
 			}
 
 			if (hit.collider == null && _selectedCard != null)
@@ -111,55 +150,60 @@ public class PlayerController : MonoBehaviour {
 				_selectedCard = null;
 			}
 
-			if (Input.GetMouseButtonDown(0))
+			if (_isCurrentTurn)
 			{
-				// mouse down
-				if (_selectedCard != null)
+
+				if (Input.GetMouseButtonDown(0))
 				{
-					_screenPoint = Camera.main.WorldToScreenPoint(_selectedCard.transform.position);
-					_offset = _selectedCard.transform.position - _playerCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z));
-					_selectedCard.CardStartDraging(_offset);
+					// mouse down
+					if (_selectedCard != null)
+					{
+						_screenPoint = Camera.main.WorldToScreenPoint(_selectedCard.transform.position);
+						_offset = _selectedCard.transform.position - _playerCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z));
+						_selectedCard.CardStartDraging(_offset);
+					}
 				}
-			}
-
-			if (Input.GetMouseButtonUp(0))
-			{
-				// mouse up
-				if (_selectedCard != null)
+				
+				if (Input.GetMouseButtonUp(0))
 				{
-					ZoneControllerAbstract releasedInZone = null;
-					if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Zones")))
+					// mouse up
+					if (_selectedCard != null)
 					{
-						releasedInZone = hit.collider.gameObject.GetComponent<ZoneControllerAbstract>();
+						ZoneControllerAbstract releasedInZone = null;
+						if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Zones")))
+						{
+							releasedInZone = hit.collider.gameObject.GetComponent<ZoneControllerAbstract>();
+						}
+						
+						if (releasedInZone != null)
+						{
+							TryToPlayCardToZone(_selectedCard, releasedInZone);
+						}
+						else
+						{
+							Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z);
+							Vector3 curPosition = _playerCamera.ScreenToWorldPoint(curScreenPoint);
+							_selectedCard.CardEndDraging(curPosition);
+							
+						}
+						
+						_selectedCard = null;
 					}
-
-					if (releasedInZone != null)
-					{
-						TryToPlayCardToZone(_selectedCard, releasedInZone);
-					}
-					else
+				}
+				
+				if (Input.GetMouseButton(0))
+				{
+					// mouse drag
+					
+					if (_selectedCard != null)
 					{
 						Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z);
 						Vector3 curPosition = _playerCamera.ScreenToWorldPoint(curScreenPoint);
-						_selectedCard.CardEndDraging(curPosition);
-
+						_selectedCard.CardDragged(curPosition);
 					}
-
-					_selectedCard = null;
 				}
 			}
 
-			if (Input.GetMouseButton(0))
-			{
-				// mouse drag
-
-				if (_selectedCard != null)
-				{
-					Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z);
-					Vector3 curPosition = _playerCamera.ScreenToWorldPoint(curScreenPoint);
-					_selectedCard.CardDragged(curPosition);
-				}
-			}
 		}
 	
 	}
@@ -214,6 +258,16 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		//card.transform.SetParent(this.gameObject.transform);
+	}
+
+	public void StartPlayerTurn()
+	{
+		_isCurrentTurn = true;
+	}
+
+	public void EndPlayerTurn()
+	{
+		_isCurrentTurn = false;
 	}
 
 	#endregion
@@ -271,6 +325,14 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
+
+	private void FinishTurn()
+	{
+		if (OnEndTurn != null)
+		{
+			OnEndTurn(this);
+		}
+	}
 
 	private bool CanPlayCard(CardController card)
 	{

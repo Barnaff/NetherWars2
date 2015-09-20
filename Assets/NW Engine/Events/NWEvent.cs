@@ -12,7 +12,8 @@ namespace NetherWars
 	    CardChangeZone,
 		StartGame,
 	    StartTurn,
-	    CardAttemptToChangeZone
+	    CardAttemptToChangeZone,
+		EndTurn,
 	}
 
 	#region Events Keys
@@ -130,6 +131,13 @@ namespace NetherWars
 			return eventObject;
 		}
 
+		public static NWEvent EndTurn(INWPlayer player)
+		{
+			Hashtable data = new Hashtable();
+			data.Add((int)eEventField.Player, player.PlayerID);
+			NWEvent eventObject = new NWEvent(NWEventType.EndTurn, data);
+			return eventObject;
+		}
 
 		#endregion
 	}
