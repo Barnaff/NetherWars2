@@ -14,6 +14,9 @@ namespace NetherWars
 	    StartTurn,
 	    CardAttemptToChangeZone,
 		EndTurn,
+		ZoneUpdated,
+		PutCardInResource,
+		PayForCard,
 	}
 
 	#region Events Keys
@@ -27,6 +30,7 @@ namespace NetherWars
 		ToZone,
 		Player,
 		AsResource,
+		Zone,
 	}
 	
 	
@@ -136,6 +140,41 @@ namespace NetherWars
 			Hashtable data = new Hashtable();
 			data.Add((int)eEventField.Player, player.PlayerID);
 			NWEvent eventObject = new NWEvent(NWEventType.EndTurn, data);
+			return eventObject;
+		}
+
+		public static NWEvent ZoneUpdated(NWZone zone)
+		{
+			Hashtable data = new Hashtable();
+			data.Add((int)eEventField.Zone, zone.ZoneID);
+			NWEvent eventObject = new NWEvent(NWEventType.ZoneUpdated, data);
+			return eventObject;
+		}
+
+		public static NWEvent PlayCard(NWPlayer player, NWCard card)
+		{
+			Hashtable data = new Hashtable();
+			data.Add((int)eEventField.Card , card.CardUniqueID);
+			data.Add((int)eEventField.Player, player.PlayerID);
+			NWEvent eventObject = new NWEvent(NWEventType.PlayCard, data);
+			return eventObject;
+		}
+
+		public static NWEvent PutCardInResources(NWPlayer player, NWCard card)
+		{
+			Hashtable data = new Hashtable();
+			data.Add((int)eEventField.Card , card.CardUniqueID);
+			data.Add((int)eEventField.Player, player.PlayerID);
+			NWEvent eventObject = new NWEvent(NWEventType.PutCardInResource, data);
+			return eventObject;
+		}
+
+		public static NWEvent PayForCard(NWPlayer player, NWCard card)
+		{
+			Hashtable data = new Hashtable();
+			data.Add((int)eEventField.Card , card.CardUniqueID);
+			data.Add((int)eEventField.Player, player.PlayerID);
+			NWEvent eventObject = new NWEvent(NWEventType.PayForCard, data);
 			return eventObject;
 		}
 

@@ -52,6 +52,8 @@ namespace NetherWars
 			_eventDispatcher.OnDispatchEvent += HandleOnDispatchEvent;
 			_eventDispatcher.OnEndTurn += HandleOnEndTurn;
 			_eventDispatcher.OnStartTurn += HandleOnStartTurn;
+			_eventDispatcher.OnPlayCard += HandleOnPlayCard;
+			_eventDispatcher.OnPutCardInResources += HandleOnPutCardInResources;
 			_networkManager = networkManager;
 			networkManager.OnJoinedGame += OnJoinedGameHandler;
 			networkManager.OnOtherPlayerJoined += OnOtherPlayerJoinedHandler;
@@ -60,6 +62,8 @@ namespace NetherWars
 			_player = player;
 		}
 
+
+
 		#endregion
 
 
@@ -67,22 +71,34 @@ namespace NetherWars
 
 		public bool CanPlayCard(INWPlayer player, NWCard card)
 		{
-			return true;
+			if (card != null && player.ResourcePool.CanPayForCard(card))
+			{
+				return true;
+			}
+			return false;
 		}
 
 		public void PlayCard(INWPlayer player, NWCard card)
 		{
-			_eventDispatcher.DispatchEvent(NWEvent.CardChangeZone(card, player.Hand, player.Battlefield));
+			//_player.ResourcePool.PayForCard(card);
+			//_eventDispatcher.DispatchEvent(NWEvent.CardChangeZone(card, player.Hand, player.Battlefield));
+			_eventDispatcher.DispatchEvent(NWEvent.PlayCard((NWPlayer)player, card));
 		}
 
 		public bool CanPutCardInResources(INWPlayer player, NWCard card)
 		{
-			return true;
+			if (player.ResourcePool.NumberOfResourcesPutThisTurn < 1)
+			{
+				return true;
+			}
+			return false;
 		}
 
 		public void PutCardInResources(INWPlayer player, NWCard card)
 		{
-			_eventDispatcher.DispatchEvent(NWEvent.CardChangeZone(card, player.Hand, player.ResourcePool));
+			//_eventDispatcher.DispatchEvent(NWEvent.CardChangeZone(card, player.Hand, player.ResourcePool));
+
+			_eventDispatcher.DispatchEvent(NWEvent.PutCardInResources((NWPlayer)player, card));
 		}
 
 		public void EndPlayerTurn(INWPlayer player)
@@ -241,6 +257,8 @@ namespace NetherWars
 				_eventDispatcher.DispatchEvent(NWEvent.StartTurn(playerTurn));
 			}
 		}
+
+
 
 		#endregion
 
@@ -426,6 +444,23 @@ namespace NetherWars
 			{
 				INWPlayer opponent = OpponentOfPlayer(player);
 				StartTurn(opponent);
+			}
+		}
+
+		void HandleOnPutCardInResources (INWPlayer player, NWCard card)
+		{
+			if (_networkManager.IsServer)
+			{
+				_eventDispatcher.DispatchEvent(NWEvent.CardChangeZone(card, player.Hand, player.ResourcePool));
+			}
+		}
+		
+		void HandleOnPlayCard (INWPlayer player, NWCard card)
+		{
+			if (_networkManager.IsServer)
+			{
+ 				_eventDispatcher.DispatchEvent(NWEvent.PayForCard((NWPlayer)player, card));
+				_eventDispatcher.DispatchEvent(NWEvent.CardChangeZone(card, player.Hand, player.Battlefield));
 			}
 		}
 

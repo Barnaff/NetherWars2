@@ -286,12 +286,26 @@ public class PlayerController : MonoBehaviour {
 		{
 		case eZoneType.Battlefield:
 		{
-			PlayCard(card);
+			if (CanPlayCard(card))
+			{
+				PlayCard(card);
+			}
+			else
+			{
+				card.CardEndDraging(Vector3.zero);
+			}
 			break;
 		}
 		case eZoneType.ResourcePool:
 		{
-			PutCardInResource(card);
+			if (CanPutCardInResource(card))
+			{
+				PutCardInResource(card);
+			}
+			else
+			{
+				card.CardEndDraging(Vector3.zero);
+			}
 			break;
 		}
 		default:
@@ -299,6 +313,7 @@ public class PlayerController : MonoBehaviour {
 			break;
 		}
 		}
+
 	}
 
 	#endregion

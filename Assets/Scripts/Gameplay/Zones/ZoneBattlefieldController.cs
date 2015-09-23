@@ -5,6 +5,12 @@ public class ZoneBattlefieldController : ZoneControllerAbstract {
 
 
 	#region implemented abstract members of ZoneControllerAbstract
+
+	protected override void InitializeZoneController ()
+	{
+
+	}
+
 	protected override void PlaceCardInZone (CardController cardController, bool animated = true)
 	{
 		cardController.transform.SetParent(this.transform);
@@ -12,7 +18,7 @@ public class ZoneBattlefieldController : ZoneControllerAbstract {
 		SortCardInZone(true);
 	}
 
-	protected override void SortCardInZone (bool animated)
+	public override void SortCardInZone (bool animated)
 	{
 		float cardWidth = 2.3f;
 		float posX = _cardsInZone.Count * 0.5f * -cardWidth + (-cardWidth * 0.5f);

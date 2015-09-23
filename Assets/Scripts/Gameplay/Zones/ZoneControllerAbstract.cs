@@ -36,6 +36,8 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 		_zoneData = zone;
 		_zoneType = zone.Type;
 		_player = player;
+
+		InitializeZoneController();
 	}
 
 	public virtual void AddCardToZone(CardController card, bool animated = true)
@@ -88,7 +90,9 @@ public abstract class ZoneControllerAbstract : MonoBehaviour {
 
 	protected abstract void PlaceCardInZone(CardController cardController, bool animated = true);
 
-	protected abstract void SortCardInZone(bool animated);
+	public abstract void SortCardInZone(bool animated);
+
+	protected abstract void InitializeZoneController();
 
 
 	public bool IsCardInZone(CardController card)

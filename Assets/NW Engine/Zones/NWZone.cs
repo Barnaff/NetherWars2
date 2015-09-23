@@ -110,7 +110,11 @@ namespace NetherWars
 		
 		public virtual void AddCard(NWCard card)
 		{
-			_cardsInZone.Add(card);
+			if (!_cardsInZone.Contains(card))
+			{
+				_cardsInZone.Add(card);
+				NWEventDispatcher.Instance().DispatchEvent(NWEvent.ZoneUpdated(this));
+			}
 		}
 		
 		public virtual void SetCardsList(List<NWCard> cards)

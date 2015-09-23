@@ -11,11 +11,14 @@ namespace NetherWars
 		public event DispatchEventDelegate OnDispatchEvent;
 
 		public event PlayCardDelegate OnPlayCard;
+		public event PutCardInResourcesDelegate OnPutCardInResources;
 		public event CardDrawDelegate OnCardDraw;
 		public event CardChangeZoneDelegate OnCardChangeZone;
 		public event StartTurnDelegate OnStartTurn;
 		public event StartGameDelegate OnStartGame;
 		public event EndTurnDelegate OnEndTurn;
+		public event ZoneUpdatedDelegate OnZoneUpdated;
+		public event PayForCardDelegate OnPayForCard;
 
 		#endregion
 
@@ -63,10 +66,16 @@ namespace NetherWars
 			{
 			case NWEventType.PlayCard:
 			{
-				NWPlayer player = NWPlayer.GetPlayer((int)eventObject.Data[eEventField.Player]);
-				bool playAsResource = (bool)eventObject.Data[(int)eEventField.AsResource];
+				NWPlayer player = NWPlayer.GetPlayer((int)eventObject.Data[(int)eEventField.Player]);
 				NWCard card = NWCard.GetCard((int)eventObject.Data[(int)eEventField.Card]);
-				PlayCard(player, card, playAsResource);
+				PlayCard(player, card);
+				break;
+			}
+			case NWEventType.PutCardInResource:
+			{
+				NWPlayer player = NWPlayer.GetPlayer((int)eventObject.Data[(int)eEventField.Player]);
+				NWCard card = NWCard.GetCard((int)eventObject.Data[(int)eEventField.Card]);
+				PutCardInResources(player, card);
 				break;
 			}
 			case NWEventType.DrawCard:
@@ -101,6 +110,19 @@ namespace NetherWars
 				EndTurn(player);
 				break;
 			}
+			case NWEventType.ZoneUpdated:
+			{
+				NWZone zone = NWZone.GetZone((int)eventObject.Data[(int)eEventField.Zone]);
+				ZoneUpdated(zone);
+				break;
+			}
+			case NWEventType.PayForCard:
+			{
+				NWPlayer player = NWPlayer.GetPlayer((int)eventObject.Data[(int)eEventField.Player]);
+				NWCard card = NWCard.GetCard((int)eventObject.Data[(int)eEventField.Card]);
+				PayForCard(player, card);
+				break;
+			}
 			default:
 			{
 				Debug.LogError("ERROR - Unrecognized Event Type!");
@@ -124,11 +146,19 @@ namespace NetherWars
 
 		#region event handlers
 
-		private void PlayCard(NWPlayer player, NWCard card, bool playAsResource = false)
+		private void PlayCard(NWPlayer player, NWCard card)
 		{
 			if (OnPlayCard != null)
 			{
-				OnPlayCard(player, card, playAsResource);
+				OnPlayCard(player, card);
+			}
+		}
+
+		private void PutCardInResources(NWPlayer player, NWCard card)
+		{
+			if (OnPutCardInResources != null)
+			{
+				OnPutCardInResources(player, card);
 			}
 		}
 
@@ -169,6 +199,22 @@ namespace NetherWars
 			if (OnEndTurn != null)
 			{
 				OnEndTurn(player);
+			}
+		}
+
+		private void ZoneUpdated(NWZone zone)
+		{
+			if (OnZoneUpdated != null)
+			{
+				OnZoneUpdated(zone);
+			}
+		}
+
+		private void PayForCard(NWPlayer player, NWCard card)
+		{
+			if (OnPayForCard != null)
+			{
+				OnPayForCard(player, card);
 			}
 		}
 

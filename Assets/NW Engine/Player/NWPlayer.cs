@@ -33,8 +33,10 @@ namespace NetherWars
 
 		public static NWPlayer GetPlayer(int playerId)
 		{
+			Debug.Log("looking for player id: " + playerId);
 			if (NWPlayer._cachedPlayers.ContainsKey(playerId))
 			{
+				Debug.Log("found player: " + playerId);
 				return NWPlayer._cachedPlayers[playerId];
 			}
 			return null;
@@ -49,6 +51,10 @@ namespace NetherWars
 			_battlefield = new NWBattlefield();
 			_resourcePool = new NWResourcePool();
 
+			NWEventDispatcher eventDispatcher = NWEventDispatcher.Instance();
+			eventDispatcher.OnCardChangeZone += HandleOnCardChangeZone;
+			eventDispatcher.OnStartTurn += HandleOnStartTurn;
+			eventDispatcher.OnPayForCard += HandleOnPayForCard;
 		}
 
 		#endregion
@@ -171,6 +177,30 @@ namespace NetherWars
 			}
 
 		}
+
+		#endregion
+
+
+		#region Handle Events
+
+		void HandleOnCardChangeZone (NWCard card, NWZone fromZone, NWZone toZone)
+		{
+			fromZone.RemoveCardFromZone(card);
+			toZone.AddCard(card);
+		}
+
+		
+		void HandleOnStartTurn (INWPlayer player)
+		{
+			_resourcePool.ResetPool();
+		}
+
+		
+		void HandleOnPayForCard (INWPlayer player, NWCard card)
+		{
+			_resourcePool.PayForCard(card);
+		}
+
 
 		#endregion
 	}

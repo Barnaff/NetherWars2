@@ -17,5 +17,6 @@ namespace NetherWars
 
 		int NumberOfResourcesPutThisTurn{ get; }
 
+		int TotalMana { get; }
 	}
 }

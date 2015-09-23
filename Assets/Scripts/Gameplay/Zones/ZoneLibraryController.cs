@@ -6,6 +6,11 @@ public class ZoneLibraryController : ZoneControllerAbstract {
 
 	#region implemented abstract members of ZoneControllerAbstract
 
+	protected override void InitializeZoneController ()
+	{
+
+	}
+
 	protected override void PlaceCardInZone (CardController cardController, bool animated = true)
 	{
 		//cardController.IsFlipped = true;
@@ -15,7 +20,7 @@ public class ZoneLibraryController : ZoneControllerAbstract {
 	}
 
 
-	protected override void SortCardInZone (bool animated)
+	public override void SortCardInZone (bool animated)
 	{
 		for (int i = _cardsInZone.Count - 1 ; i >= 0 ; i--)
 		{

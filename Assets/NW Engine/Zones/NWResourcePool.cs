@@ -28,10 +28,14 @@ namespace NetherWars
 
 		public override void AddCard (NWCard card)
 		{
+			bool cardExistsInZone = _cardsInZone.Contains(card);
 			base.AddCard (card);
-			UpdateResourcePool();
-			_totalMana++;
-			_numberOfResouecesPutThisTurn++;
+			if (!cardExistsInZone)
+			{
+				UpdateResourcePool();
+				_totalMana++;
+				_numberOfResouecesPutThisTurn++;
+			}
 		}
 		 
 		public override void RemoveCardsFromZone (System.Collections.Generic.List<NWCard> i_cards)
@@ -50,10 +54,12 @@ namespace NetherWars
 			_totalMana = _cardsInZone.Count;
 			_manaUsedThisTurn = 0;
 			_numberOfResouecesPutThisTurn = 0;
+			NWEventDispatcher.Instance().DispatchEvent(NWEvent.ZoneUpdated(this));
 		}
 		
 		public bool CanPayForCard(NWCard card)
 		{
+			Debug.Log("can pay for card: " + card.CastingCost + " total mana: " + _totalMana);
 			if (_totalMana - _manaUsedThisTurn >= card.CastingCost)
 			{
 				return true;
@@ -65,6 +71,7 @@ namespace NetherWars
 		{
 			_manaUsedThisTurn += card.CastingCost;
 			UpdateResourcePool();
+			NWEventDispatcher.Instance().DispatchEvent(NWEvent.ZoneUpdated(this));
 		}
 
 		public int ThrasholdForColor(NWColor color)
@@ -92,6 +99,14 @@ namespace NetherWars
 			}
 		}
 
+		public int TotalMana
+		{
+			get
+			{
+				return _totalMana;
+			}
+		}
+
 		#endregion
 
 
@@ -100,6 +115,7 @@ namespace NetherWars
 		private void UpdateResourcePool()
 		{
 			_thrasholdCount.Clear();
+
 			foreach (NWCard card in _cardsInZone)
 			{
 				foreach (NWColor color in card.CardColors)
@@ -114,6 +130,14 @@ namespace NetherWars
 					}
 				}
 			}
+
+			string outpot = "";
+			foreach (NWColor color in _thrasholdCount.Keys)
+			{
+				outpot += color + ":" + _thrasholdCount[color].ToString();
+			}
+			outpot += " mana: " + _totalMana;
+			Debug.Log(outpot);
 		}
 
 		#endregion

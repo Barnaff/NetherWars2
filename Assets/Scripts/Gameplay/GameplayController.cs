@@ -69,7 +69,7 @@ public class GameplayController : MonoBehaviour {
 
 	private bool HandleOnCanPlayCard(PlayerController playerController, CardController card)
 	{
-		return _netherWarsEngine.CanPlayCard(null, null);
+		return _netherWarsEngine.CanPlayCard(playerController.Player, card.Card);
 	}
 
 	private void HandlePlayCard(PlayerController playerController, CardController cardController)
@@ -80,6 +80,11 @@ public class GameplayController : MonoBehaviour {
 	private void HandleOnPutCardInResource(PlayerController playerController, CardController cardController)
 	{
 		_netherWarsEngine.PutCardInResources(playerController.Player, cardController.Card);
+	}
+
+	private bool HandleOnCanPutCardInResources(PlayerController playerController, CardController cardController)
+	{
+		return _netherWarsEngine.CanPutCardInResources(playerController.Player, cardController.Card);
 	}
 
 	private void HandleEndTurn(PlayerController player)
@@ -116,6 +121,7 @@ public class GameplayController : MonoBehaviour {
 				playerController.OnCanPlayCard += HandleOnCanPlayCard;
 				playerController.OnPlayCard += HandlePlayCard;
 				playerController.OnPutCardInResource += HandleOnPutCardInResource;
+				playerController.OnCanPutInResource += HandleOnCanPutCardInResources;
 				playerController.OnEndTurn += HandleEndTurn;
 			}
 

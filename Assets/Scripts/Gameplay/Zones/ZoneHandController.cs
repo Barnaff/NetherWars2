@@ -6,6 +6,11 @@ public class ZoneHandController : ZoneControllerAbstract {
 
 	#region implemented abstract members of ZoneControllerAbstract
 
+	protected override void InitializeZoneController ()
+	{
+
+	}
+
 	protected override void PlaceCardInZone (CardController cardController, bool animated = true)
 	{
 		cardController.transform.SetParent(this.transform);
@@ -32,7 +37,7 @@ public class ZoneHandController : ZoneControllerAbstract {
 
 	float _distanceBtweenCards = 1.5f;
 
-	protected override void SortCardInZone (bool animated)
+	public override void SortCardInZone (bool animated)
 	{
 
 		float radius = _cardsInZone.Count * _distanceBtweenCards;
