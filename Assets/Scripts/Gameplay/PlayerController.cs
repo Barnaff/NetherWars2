@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 _screenPoint;
 	private Vector3 _offset;
 
+	[SerializeField]
 	private bool _isCurrentTurn;
 
 	#region Events
@@ -140,8 +141,6 @@ public class PlayerController : MonoBehaviour {
 						// opponent card
 					}
 				}
-
-
 			}
 
 			if (hit.collider == null && _selectedCard != null)

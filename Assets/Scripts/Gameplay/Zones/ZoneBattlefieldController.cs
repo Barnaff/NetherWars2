@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ZoneBattlefieldController : ZoneControllerAbstract {
 
@@ -35,6 +36,60 @@ public class ZoneBattlefieldController : ZoneControllerAbstract {
 			card.IsFlipped = !_canSeeCardsInZone;
 		}
 	}
+
 	#endregion
+
+	void Start()
+	{
+		List<CardController> tmpCardsList = new List<CardController>();
+		tmpCardsList.AddRange(_cardsInZone);
+		_cardsInZone.Clear();
+		
+		foreach (CardController card in tmpCardsList)
+		{
+			AddCardToZone(card);
+		}
+		
+		SortCardInZone(true);
+	}
+
+	#region Handle cards events
+	
+	protected override void HandleOnCardHover (CardController card)
+	{
+		base.HandleOnCardHover (card);
+	}
+	
+	protected override void HandleOnCardEndHover (CardController card)
+	{
+		base.HandleOnCardEndHover (card);
+	}
+
+	protected override void HandleOnCardStartDraging (CardController card, Vector3 mousePosition)
+	{
+		base.HandleOnCardStartDraging (card, mousePosition);
+
+		LineRenderer lineRenderer = card.gameObject.AddComponent<LineRenderer>();
+		lineRenderer.SetPosition(0, card.transform.position);
+		lineRenderer.SetWidth(0.5f, 0.5f);
+	}
+	
+	protected override void HandleOnCardDragged (CardController card, Vector3 mousePosition)
+	{
+		base.HandleOnCardDragged(card, mousePosition);
+
+		LineRenderer lineRenderer = card.gameObject.GetComponent<LineRenderer>();
+		lineRenderer.SetPosition(1, mousePosition);
+
+	}
+	
+	protected override void HandleOnCardEndDraging (CardController card, Vector3 mousePosition)
+	{
+		Destroy(card.gameObject.GetComponent<LineRenderer>());
+		this.SortCardInZone(true);
+	}
+	
+	#endregion
+
 
 }
